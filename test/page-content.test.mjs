@@ -69,6 +69,7 @@ test("keeps_business_content_static", async () => {
   assert.doesNotMatch(html, /sign[ -]?in|log[ -]?in/i);
   assert.doesNotMatch(html, /aggregateRating|reviewCount|ratingValue/i);
   assert.doesNotMatch(html, /five[- ]star|5[- ]star|★★★★★/i);
+  assert.doesNotMatch(html, /class="review-stars"/i);
   assert.doesNotMatch(html, /<blockquote[\s>]|class="review-card"/i);
   assert.doesNotMatch(html, /<script[^>]+src=/i);
 });
