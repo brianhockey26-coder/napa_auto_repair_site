@@ -15,7 +15,7 @@
 - Business name: Napa Auto Repair.
 - Address: 1184 F Cozzens Ln, North Brunswick Township, NJ 08902.
 - Phone display: +1 (908) 416-6132; phone URI: `tel:+19084166132`.
-- Hours: Monday through Saturday, 9:00 AM–6:00 PM; Sunday closed.
+- Hours: Monday through Saturday, 8:30 AM–6:00 PM; Sunday closed.
 - Present general auto repair services without implying the displayed list is exhaustive.
 - State only the owner-supplied review claim that all Google reviews are five stars; do not invent quotations, a review count, or aggregate-rating schema.
 - The production site must be public without authentication, CAPTCHA, or `noindex`.
@@ -97,7 +97,7 @@ Create tests named `build_requires_valid_https_origin`, `build_emits_complete_st
 - No `{{SITE_ORIGIN}}` token remains.
 - Canonical, sitemap, and JSON-LD URL equal `https://example.test/`.
 - `robots.txt` allows `Googlebot` and `OAI-SearchBot` and references `https://example.test/sitemap.xml`.
-- JSON-LD parses as `AutoRepair` and contains the exact name, telephone, postal address, Monday–Saturday 09:00–18:00 schedule, and Sunday closure by omission.
+- JSON-LD parses as `AutoRepair` and contains the exact name, telephone, postal address, Monday–Saturday 08:30–18:00 schedule, and Sunday closure by omission.
 - JSON-LD contains no `review`, `aggregateRating`, `ratingValue`, or `reviewCount`.
 
 - [ ] **Step 2: Run tests to verify they fail**

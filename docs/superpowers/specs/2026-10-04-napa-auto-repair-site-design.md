@@ -13,7 +13,7 @@ The primary audience is drivers in and around North Brunswick Township, New Jers
 - Name: Napa Auto Repair
 - Address: 1184 F Cozzens Ln, North Brunswick Township, NJ 08902
 - Phone: +1 (908) 416-6132
-- Hours: Monday through Saturday, 9:00 AM–6:00 PM; Sunday closed
+- Hours: Monday through Saturday, 8:30 AM–6:00 PM; Sunday closed
 - Services: General auto repair services
 - Reputation statement supplied by the owner: All Google reviews are five stars
 
