@@ -39,7 +39,11 @@ jobs:
         run: node --test
 
       - name: Build static site
-        run: node scripts/build.mjs --origin "${{ steps.pages.outputs.base_url }}"
+        env:
+          PAGES_BASE_URL: ${{ steps.pages.outputs.base_url }}
+        run: |
+          HTTPS_BASE_URL="${PAGES_BASE_URL/http:\/\//https:\/\/}"
+          node scripts/build.mjs --origin "$HTTPS_BASE_URL"
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

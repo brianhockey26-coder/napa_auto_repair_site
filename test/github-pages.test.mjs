@@ -13,6 +13,8 @@ test("workflow_tests_builds_and_deploys_pages", async () => {
     "actions/deploy-pages@v4",
     "node --test",
     "steps.pages.outputs.base_url",
+    "PAGES_BASE_URL",
+    "HTTPS_BASE_URL",
     "path: dist",
   ]) {
     assert.match(workflow, new RegExp(required.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
@@ -22,4 +24,5 @@ test("workflow_tests_builds_and_deploys_pages", async () => {
   assert.match(workflow, /id-token:\s*write/);
   assert.match(workflow, /environment:\s*\n\s*name:\s*github-pages/);
   assert.match(workflow, /enablement:\s*true/);
+  assert.match(workflow, /PAGES_BASE_URL\/http:\\\/\\\/\/https:\\\/\\\//);
 });
