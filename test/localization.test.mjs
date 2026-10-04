@@ -46,6 +46,7 @@ test("language_switcher_links_equivalent_routes", async () => {
     assert.match(page, />ES<\/a>/);
     assert.match(page, />中文<\/a>/);
     assert.match(page, /aria-current="page"/);
+    assert.equal((page.match(/class="brand-logo"/g) ?? []).length, 2);
   }
   assert.match(pages.en, /href="es\/"[^>]*>ES<\/a>/);
   assert.match(pages.en, /href="zh\/"[^>]*>中文<\/a>/);
@@ -101,15 +102,15 @@ test("translations_avoid_rating_claims_and_forms", async () => {
 test("mobile_header_protects_brand_and_language_controls", async () => {
   const css = await readFile(path.join(projectRoot, "src", "styles.css"), "utf8");
 
-  assert.match(css, /\.brand-mark\s*\{[^}]*flex:\s*0 0 auto/s);
-  assert.match(css, /@media\s*\(max-width:\s*35rem\)[\s\S]*\.brand\s*>\s*span:last-child\s*\{[^}]*display:\s*none/s);
+  assert.match(css, /\.brand\s*\{[^}]*flex:\s*0 0 auto/s);
+  assert.match(css, /@media\s*\(max-width:\s*35rem\)[\s\S]*\.brand-logo\s*\{[^}]*width:\s*92px/s);
 });
 
 test("build_emits_multilingual_routes_and_sitemap", async () => {
   const outputDir = await mkdtemp(path.join(os.tmpdir(), "napa-localized-"));
   await buildSite({ origin: "https://example.test/napa-auto-repair-website", outputDir });
 
-  for (const route of ["index.html", "es/index.html", "zh/index.html"]) {
+  for (const route of ["index.html", "es/index.html", "zh/index.html", "assets/napa-auto-repair-logo.png"]) {
     assert.equal((await stat(path.join(outputDir, route))).isFile(), true);
   }
   const [english, spanish, chinese, sitemap] = await Promise.all([

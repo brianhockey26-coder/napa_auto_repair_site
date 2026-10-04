@@ -51,6 +51,13 @@ test("uses_semantic_accessible_structure", async () => {
   assert.match(css, /:focus-visible/);
 });
 
+test("uses_the_shop_logo_in_header_and_footer", async () => {
+  const { html, css } = await source();
+
+  assert.equal((html.match(/<img class="brand-logo" src="assets\/napa-auto-repair-logo\.png" alt="">/g) ?? []).length, 2);
+  assert.match(css, /\.brand-logo\s*\{[^}]*object-fit:\s*contain/s);
+});
+
 test("keeps_business_content_static", async () => {
   const { html } = await source();
 

@@ -87,10 +87,12 @@ export async function buildSite({ origin, outputDir }) {
   await Promise.all([
     mkdir(path.join(resolvedOutput, "es"), { recursive: true }),
     mkdir(path.join(resolvedOutput, "zh"), { recursive: true }),
+    mkdir(path.join(resolvedOutput, "assets"), { recursive: true }),
   ]);
   await Promise.all([
     ...renderedRoutes.map((route) => writeFile(path.join(resolvedOutput, route.output), route.html, "utf8")),
     copyFile(path.join(projectRoot, "src", "styles.css"), path.join(resolvedOutput, "styles.css")),
+    copyFile(path.join(projectRoot, "src", "assets", "napa-auto-repair-logo.png"), path.join(resolvedOutput, "assets", "napa-auto-repair-logo.png")),
     writeFile(path.join(resolvedOutput, "robots.txt"), robots, "utf8"),
     writeFile(path.join(resolvedOutput, "sitemap.xml"), sitemap, "utf8"),
   ]);
