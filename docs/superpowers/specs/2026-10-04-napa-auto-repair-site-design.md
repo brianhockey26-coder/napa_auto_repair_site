@@ -36,6 +36,10 @@ The page will feel like a trustworthy neighborhood garage rather than a generic 
 
 The site is presentation-only and requires no authentication, forms, database, tracking, uploads, or stored customer data. The primary interactions are section navigation, smooth in-page movement, telephone links, and external Google Maps and Google review links. External links will fail gracefully by leaving all business information readable on the page.
 
+## Hosting and Domain
+
+The static site will be published from a public GitHub repository with GitHub Pages and enforced HTTPS. Its first public address may use GitHub's default Pages domain. When the owner rents a domain, that domain will be verified and configured in GitHub Pages and at the DNS provider; a new deployment will then update the canonical URL, sitemap, and structured data to the custom HTTPS address. The site must use relative asset paths so it works both under a project-site path and at a custom-domain root.
+
 ## Accessibility, Search, and AI Discoverability
 
 The implementation will use semantic page landmarks, logical heading order, keyboard-accessible links, visible focus states, sufficient contrast, descriptive link labels, and responsive text sizing. The page title, description, canonical URL, favicon, and local-business-oriented metadata will identify Napa Auto Repair and its North Brunswick location.
@@ -61,6 +65,8 @@ Before publication, verify:
 - The sitemap uses the final public canonical URL.
 - The JSON-LD parses successfully and matches the business details visible on the page.
 - Search metadata, canonical URL, and structured data do not claim an unverified review count or rating aggregate.
+- The GitHub Pages deployment completes successfully from the public repository and HTTPS is enabled.
+- The initial GitHub Pages URL works without sign-in; when a custom domain is later supplied, its DNS, domain verification, HTTPS, and canonical URL must also be verified.
 
 ## Out of Scope
 

@@ -2,11 +2,11 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build and publicly deploy a no-sign-in, crawler-accessible one-page website for Napa Auto Repair that explains its services and makes calling or visiting easy.
+**Goal:** Build and publicly deploy a no-sign-in, crawler-accessible one-page website for Napa Auto Repair on GitHub Pages that explains its services and makes calling or visiting easy.
 
-**Architecture:** Use a small static site generated from source HTML and CSS by a dependency-free Node build script. The build accepts the registered public Site origin, injects canonical and structured-data URLs, and writes a deployable `dist/` directory containing the page, stylesheet, `robots.txt`, and `sitemap.xml`.
+**Architecture:** Use a small static site generated from source HTML and CSS by a dependency-free Node build script. The build accepts the active public base URL, including an optional GitHub project path, injects canonical and structured-data URLs, and writes a deployable `dist/` directory containing the page, stylesheet, `robots.txt`, and `sitemap.xml`. A GitHub Actions workflow tests, builds, and deploys `dist/` to GitHub Pages; when a custom domain is configured, the same workflow rebuilds metadata for that domain.
 
-**Tech Stack:** Semantic HTML5, modern CSS, Schema.org JSON-LD, Node.js built-in test runner, OpenAI Sites static hosting
+**Tech Stack:** Semantic HTML5, modern CSS, Schema.org JSON-LD, Node.js built-in test runner, GitHub Actions, GitHub Pages
 
 **Spec:** `docs/superpowers/specs/2026-10-04-napa-auto-repair-site-design.md`
 
@@ -19,6 +19,7 @@
 - Present general auto repair services without implying the displayed list is exhaustive.
 - Link to the shop's current Google reviews without embedding reviews or claiming a rating or review count.
 - The production site must be public without authentication, CAPTCHA, or `noindex`.
+- Host from a public GitHub repository with GitHub Pages and HTTPS; support both the initial GitHub Pages project URL and a later custom-domain root.
 - Search and AI discovery are optimized but never described as guaranteed.
 - Do not add booking, estimates, chat, accounts, payments, forms, tracking, persistence, or scheduled updates.
 
@@ -73,12 +74,13 @@ git add package.json src/index.html src/styles.css test/page-content.test.mjs
 git commit -m "feat: build Napa Auto Repair landing page"
 ```
 
-### Task 2: Generate Crawlable Deployment Artifacts
+### Task 2: Generate Crawlable GitHub Pages Artifacts
 
 **Files:**
 - Create: `scripts/build.mjs`
 - Create: `test/discoverability.test.mjs`
-- Create: `.openai/hosting.json`
+- Create: `test/github-pages.test.mjs`
+- Create: `.github/workflows/deploy-pages.yml`
 - Generate: `dist/index.html`
 - Generate: `dist/styles.css`
 - Generate: `dist/robots.txt`
@@ -86,16 +88,16 @@ git commit -m "feat: build Napa Auto Repair landing page"
 - Modify: `package.json`
 
 **Interfaces:**
-- Consumes: `src/index.html`, `src/styles.css`, and a required CLI argument `--origin https://<registered-public-host>`.
-- Produces: `dist/` with every `{{SITE_ORIGIN}}` token replaced by the normalized HTTPS origin; crawler and sitemap files sharing that origin.
+- Consumes: `src/index.html`, `src/styles.css`, and a required CLI argument `--origin https://<public-host>/<optional-project-path>`.
+- Produces: `dist/` with every `{{SITE_ORIGIN}}` token replaced by the normalized HTTPS base URL; crawler and sitemap files sharing that URL, plus a GitHub Pages deployment workflow.
 
 - [ ] **Step 1: Write failing build and discoverability tests**
 
-Create tests named `build_requires_valid_https_origin`, `build_emits_complete_static_site`, `robots_allow_search_crawlers`, `sitemap_and_canonical_share_origin`, and `structured_data_matches_visible_facts`. Build into a temporary directory with origin `https://example.test`; assert:
+Create tests named `build_requires_valid_https_origin`, `build_preserves_optional_project_path`, `build_emits_complete_static_site`, `robots_allow_search_crawlers`, `sitemap_and_canonical_share_origin`, `structured_data_matches_visible_facts`, and `workflow_tests_builds_and_deploys_pages`. Build into temporary directories with origins `https://example.test` and `https://example.test/napa-auto-repair-website`; assert:
 
 - `dist/index.html`, `styles.css`, `robots.txt`, and `sitemap.xml` exist.
 - No `{{SITE_ORIGIN}}` token remains.
-- Canonical, sitemap, and JSON-LD URL equal `https://example.test/`.
+- Canonical, sitemap, and JSON-LD URL equal the supplied normalized base URL with a trailing slash, including the project path when present.
 - `robots.txt` allows `Googlebot` and `OAI-SearchBot` and references `https://example.test/sitemap.xml`.
 - JSON-LD parses as `AutoRepair` and contains the exact name, telephone, postal address, Monday–Saturday 08:30–18:00 schedule, and Sunday closure by omission.
 - JSON-LD contains no `review`, `aggregateRating`, `ratingValue`, or `reviewCount`.
@@ -108,7 +110,7 @@ Expected: FAIL because `scripts/build.mjs` and deployment artifacts do not exist
 
 - [ ] **Step 3: Implement the dependency-free build**
 
-Implement `export async function buildSite({ origin, outputDir })` in `scripts/build.mjs` and a CLI accepting `--origin` plus optional `--output`. Normalize to one HTTPS origin with no path or trailing slash; reject non-HTTPS or malformed origins. Replace the token, copy CSS, and generate crawler files. Add `npm run build -- --origin <origin>` and configure `.openai/hosting.json` with `static.directory` set to `dist`.
+Implement `export async function buildSite({ origin, outputDir })` in `scripts/build.mjs` and a CLI accepting `--origin` plus optional `--output`. Normalize to one HTTPS base URL with an optional path and trailing slash; reject non-HTTPS, query strings, fragments, or malformed URLs. Replace the token, copy CSS, and generate crawler files. Add `npm run build -- --origin <origin>`. Create a GitHub Actions workflow using the official checkout, setup-node, configure-pages, upload-pages-artifact, and deploy-pages actions; run `npm test`, build with `steps.pages.outputs.base_url`, and deploy `dist/`.
 
 - [ ] **Step 4: Run tests and inspect the production output**
 
@@ -123,55 +125,44 @@ Expected: build exits 0; `rg '{{SITE_ORIGIN}}|noindex|aggregateRating|reviewCoun
 - [ ] **Step 5: Commit**
 
 ```bash
-git add package.json scripts/build.mjs test/discoverability.test.mjs .openai/hosting.json
-git commit -m "feat: add crawler-friendly static site build"
+git add package.json scripts/build.mjs test/discoverability.test.mjs test/github-pages.test.mjs .github/workflows/deploy-pages.yml
+git commit -m "feat: add crawler-friendly GitHub Pages build"
 ```
 
-### Task 3: Register, Publish, and Verify Public Access
+### Task 3: Publish with GitHub Pages and Verify Public Access
 
 **Files:**
-- Modify: `.openai/hosting.json` with the registered Site `project_id`.
-- Generate: `dist/*` using the final registered public origin.
+- Configure: Public GitHub repository `napa-auto-repair-website`.
+- Generate: `dist/*` in GitHub Actions using the active Pages base URL.
 
 **Interfaces:**
-- Consumes: Passing Tasks 1–2, the approved public audience, and the registered Sites project ID and origin.
-- Produces: A successful public Sites deployment URL that requires no sign-in.
+- Consumes: Passing Tasks 1–2 and an authenticated GitHub account able to create and administer the public repository.
+- Produces: A successful public GitHub Pages URL that requires no sign-in and is ready for a later custom-domain configuration.
 
-- [ ] **Step 1: Register the new Site for public deployment**
+- [ ] **Step 1: Create the public GitHub repository**
 
-Follow the Sites registration workflow, choose a public audience, record only the returned `project_id` in `.openai/hosting.json`, and retain the returned credential in session memory rather than in files or command arguments.
+Confirm GitHub CLI authentication, create the public repository `napa-auto-repair-website` under the authenticated account, and add it as the local `origin`. Do not include credentials or secrets in the repository.
 
-- [ ] **Step 2: Build against the final public origin**
+- [ ] **Step 2: Push the implementation and enable GitHub Pages**
 
-Run: `npm run build -- --origin <registered-public-origin>`
+Push the reviewed implementation as the repository's `main` branch, configure Pages to deploy through GitHub Actions, and dispatch the workflow if the push does not start it automatically.
 
-Expected: exit 0, with canonical, sitemap, robots, and JSON-LD URLs using the exact registered origin.
+Expected: the Pages workflow starts against the public repository without requiring visitor authentication.
 
-- [ ] **Step 3: Run the full pre-publish verification**
+- [ ] **Step 3: Wait for the Pages workflow**
 
-Run: `npm test`
+Use GitHub's workflow status to wait for the exact deployment run triggered by the push.
 
-Expected: all tests PASS.
+Expected: the test, build, artifact upload, and Pages deployment jobs all succeed and return the public URL.
 
-Run the static Sites workflow with the build command and archive path required by the hosting skill.
+- [ ] **Step 4: Verify the live anonymous and crawler surface**
 
-Expected: it returns a verified commit SHA and deployable archive for the registered project.
+Using the successful deployment base URL, resolve and verify the home page, `robots.txt`, and `sitemap.xml` beneath that base URL so the initial project-site path is preserved. Confirm they return successful responses without redirects to sign-in; the live HTML has no `noindex`; its canonical and JSON-LD URL match the deployed base URL; `robots.txt` allows Googlebot and OAI-SearchBot; and the sitemap contains the same canonical URL. The missing origin-root `robots.txt` on an initial project URL is acceptable because absence means crawling is allowed; once a custom domain is mapped, the deployed file becomes the origin-root `robots.txt`.
 
-- [ ] **Step 4: Save and deploy to the public audience**
+- [ ] **Step 5: Record the custom-domain handoff**
 
-Save the verified archive as a Site version, deploy that version publicly, and poll the same deployment ID until status is `succeeded` with a URL.
+Document that after purchasing the domain, the owner should verify it in GitHub, add it under repository Settings → Pages before changing DNS, configure the provider's apex and `www` records, enforce HTTPS, and rerun the Pages workflow so canonical, sitemap, and JSON-LD URLs use the custom domain. Do not create a `CNAME` file because the deployment uses a custom GitHub Actions workflow.
 
-- [ ] **Step 5: Verify the live anonymous and crawler surface**
+- [ ] **Step 6: Handoff**
 
-Using the successful deployment URL, verify the home page, `/robots.txt`, and `/sitemap.xml` return successful responses without redirects to sign-in. Confirm the live HTML has no `noindex`, its canonical and JSON-LD URL match the deployed origin, `robots.txt` allows Googlebot and OAI-SearchBot, and the sitemap contains the same canonical URL.
-
-- [ ] **Step 6: Commit the registered manifest**
-
-```bash
-git add .openai/hosting.json
-git commit -m "chore: register public Napa Auto Repair site"
-```
-
-- [ ] **Step 7: Handoff**
-
-Open the successful Site in Codex when available and return the literal public URL, noting that it is ready to view and share without sign-in. Mention Google Business Profile verification and Search Console sitemap submission only as optional owner-account follow-ups, not as blockers to delivery.
+Open the successful GitHub Pages site in Codex when available and return the literal public URL, noting that it is ready to view and share without sign-in. Mention custom-domain setup, Google Business Profile verification, and Search Console sitemap submission as later owner-account follow-ups, not blockers to the initial GitHub Pages launch.
