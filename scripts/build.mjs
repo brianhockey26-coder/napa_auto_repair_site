@@ -39,8 +39,15 @@ function escapeXml(value) {
 export async function buildSite({ origin, outputDir }) {
   const baseUrl = normalizeBaseUrl(origin);
   const resolvedOutput = path.resolve(outputDir);
-  const sourceHtml = await readFile(path.join(projectRoot, "src", "index.html"), "utf8");
-  const html = sourceHtml.replaceAll("{{SITE_ORIGIN}}", baseUrl);
+  const routes = [
+    { language: "en", source: path.join(projectRoot, "src", "index.html"), output: "index.html", url: baseUrl },
+    { language: "es", source: path.join(projectRoot, "src", "es", "index.html"), output: path.join("es", "index.html"), url: `${baseUrl}es/` },
+    { language: "zh-Hans", source: path.join(projectRoot, "src", "zh", "index.html"), output: path.join("zh", "index.html"), url: `${baseUrl}zh/` },
+  ];
+  const renderedRoutes = await Promise.all(routes.map(async (route) => ({
+    ...route,
+    html: (await readFile(route.source, "utf8")).replaceAll("{{SITE_ORIGIN}}", baseUrl),
+  })));
 
   const robots = [
     "User-agent: Googlebot",
@@ -56,20 +63,33 @@ export async function buildSite({ origin, outputDir }) {
     "",
   ].join("\n");
 
+  const languageLinks = [
+    { hreflang: "en", href: baseUrl },
+    { hreflang: "es", href: `${baseUrl}es/` },
+    { hreflang: "zh-Hans", href: `${baseUrl}zh/` },
+    { hreflang: "x-default", href: baseUrl },
+  ];
+  const sitemapUrls = routes.flatMap((route) => [
+    "  <url>",
+    `    <loc>${escapeXml(route.url)}</loc>`,
+    ...languageLinks.map((link) => `    <xhtml:link rel="alternate" hreflang="${link.hreflang}" href="${escapeXml(link.href)}" />`),
+    "  </url>",
+  ]);
   const sitemap = [
     '<?xml version="1.0" encoding="UTF-8"?>',
-    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-    "  <url>",
-    `    <loc>${escapeXml(baseUrl)}</loc>`,
-    "  </url>",
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">',
+    ...sitemapUrls,
     "</urlset>",
     "",
   ].join("\n");
 
   await rm(resolvedOutput, { recursive: true, force: true });
-  await mkdir(resolvedOutput, { recursive: true });
   await Promise.all([
-    writeFile(path.join(resolvedOutput, "index.html"), html, "utf8"),
+    mkdir(path.join(resolvedOutput, "es"), { recursive: true }),
+    mkdir(path.join(resolvedOutput, "zh"), { recursive: true }),
+  ]);
+  await Promise.all([
+    ...renderedRoutes.map((route) => writeFile(path.join(resolvedOutput, route.output), route.html, "utf8")),
     copyFile(path.join(projectRoot, "src", "styles.css"), path.join(resolvedOutput, "styles.css")),
     writeFile(path.join(resolvedOutput, "robots.txt"), robots, "utf8"),
     writeFile(path.join(resolvedOutput, "sitemap.xml"), sitemap, "utf8"),

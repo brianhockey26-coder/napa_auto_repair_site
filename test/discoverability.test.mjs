@@ -51,7 +51,7 @@ test("build_preserves_optional_project_path", async () => {
 test("build_emits_complete_static_site", async () => {
   const built = await buildFixture("https://example.test");
 
-  for (const filename of ["index.html", "styles.css", "robots.txt", "sitemap.xml"]) {
+  for (const filename of ["index.html", "es/index.html", "zh/index.html", "styles.css", "robots.txt", "sitemap.xml"]) {
     assert.equal((await stat(path.join(built.outputDir, filename))).isFile(), true);
   }
   assert.doesNotMatch(built.html, /\{\{SITE_ORIGIN\}\}/);
