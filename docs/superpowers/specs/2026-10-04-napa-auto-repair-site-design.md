@@ -19,7 +19,7 @@ The primary audience is drivers in and around North Brunswick Township, New Jers
 
 ## Experience and Content
 
-The site will be a lightweight, responsive single page with these sections:
+The site will be a lightweight, responsive single-page experience available as three static language routes: English at the base URL, Spanish at `/es/`, and Simplified Chinese at `/zh/`. Each route will contain the same business facts, actions, and sections in clear, natural language:
 
 1. A compact sticky header with the shop name, section navigation, and a prominent tap-to-call action.
 2. A first-screen introduction positioning the shop as a dependable North Brunswick repair destination, with Call Now and Get Directions actions.
@@ -28,9 +28,11 @@ The site will be a lightweight, responsive single page with these sections:
 5. A visit section with the address, hours, Sunday closure, tap-to-call phone number, and Google Maps directions link.
 6. A concise footer repeating the essential contact details.
 
+The header will include an always-visible EN / ES / 中文 language switcher. Switching languages will navigate to the equivalent static route. The language control must remain understandable on a narrow phone without competing with the primary call action.
+
 ## Visual Direction
 
-The page will feel like a trustworthy neighborhood garage rather than a generic corporate template. It will use deep navy, warm cream, and Napa-red accents, with strong readable typography, restrained automotive motifs, clear section hierarchy, and generous touch targets. The design will remain legible and useful on phones, tablets, and desktop screens.
+The page will feel like a trustworthy neighborhood garage rather than a generic corporate template. It will use deep navy, warm cream, and Napa-red accents, with strong readable typography, restrained automotive motifs, clear section hierarchy, precise spacing, a refined language control, and generous touch targets. The design will remain legible and useful on phones, tablets, and desktop screens, including when Spanish or Chinese strings occupy different amounts of space.
 
 ## Behavior and Data
 
@@ -42,9 +44,9 @@ The static site will be published from a public GitHub repository with GitHub Pa
 
 ## Accessibility, Search, and AI Discoverability
 
-The implementation will use semantic page landmarks, logical heading order, keyboard-accessible links, visible focus states, sufficient contrast, descriptive link labels, and responsive text sizing. The page title, description, canonical URL, favicon, and local-business-oriented metadata will identify Napa Auto Repair and its North Brunswick location.
+The implementation will use semantic page landmarks, logical heading order, keyboard-accessible links, visible focus states, sufficient contrast, descriptive link labels, and responsive text sizing. Each language page will set the correct `lang`, translated title and description, self-referencing canonical URL, and reciprocal `hreflang` links for English, Spanish, Simplified Chinese, and `x-default`. The favicon and local-business-oriented metadata will identify Napa Auto Repair and its North Brunswick location.
 
-The public page and its meaningful assets will be accessible without authentication, CAPTCHA, `noindex`, or crawler-blocking rules. A root `robots.txt` will explicitly allow mainstream search and answer-engine discovery crawlers, including Googlebot and OpenAI's OAI-SearchBot, and will reference a root XML sitemap. The sitemap will contain the final canonical public URL.
+The public pages and their meaningful assets will be accessible without authentication, CAPTCHA, `noindex`, or crawler-blocking rules. A root `robots.txt` will explicitly allow mainstream search and answer-engine discovery crawlers, including Googlebot and OpenAI's OAI-SearchBot, and will reference a root XML sitemap. The sitemap will contain all three final canonical public URLs and their language relationships.
 
 The page will include valid JSON-LD using the most specific appropriate Schema.org local-business type, expected to be `AutoRepair`. It will repeat only visible, owner-supplied facts: business name, canonical URL, telephone number, postal address, opening hours, service area, and general repair category. It will not publish an `aggregateRating`, review count, fabricated reviews, geographic coordinates, prices, or other facts that have not been verified.
 
@@ -55,6 +57,8 @@ Visible copy will state the shop name, location, services, hours, and contact in
 Before publication, verify:
 
 - The page loads without blocking errors at mobile and desktop widths.
+- English, Spanish, and Simplified Chinese routes render complete translated content without horizontal overflow.
+- Every language page has the correct `lang`, canonical URL, and reciprocal `hreflang` links, and the language switcher reaches the equivalent routes.
 - Navigation and focus behavior work with a keyboard.
 - The phone link uses `tel:+19084166132`.
 - Directions and Google review links target the correct business or a precise Google Maps search for the supplied name and address.
@@ -62,7 +66,7 @@ Before publication, verify:
 - The production site is publicly reachable without a login or sign-in prompt.
 - The production page returns a successful response to anonymous requests and contains no `noindex` directive.
 - `robots.txt` permits Googlebot and OAI-SearchBot and points to the deployed sitemap.
-- The sitemap uses the final public canonical URL.
+- The sitemap uses all three final public canonical URLs.
 - The JSON-LD parses successfully and matches the business details visible on the page.
 - Search metadata, canonical URL, and structured data do not claim an unverified review count or rating aggregate.
 - The GitHub Pages deployment completes successfully from the public repository and HTTPS is enabled.
@@ -70,4 +74,4 @@ Before publication, verify:
 
 ## Out of Scope
 
-Online appointment booking, estimates, live chat, customer accounts, payment, live or embedded Google reviews, fabricated testimonials, rating claims, specific review counts, guaranteed search or AI placement, separate service pages, and ongoing scheduled updates are not part of this first version. Search-engine account setup, Google Business Profile verification, and manual sitemap submission are separate owner-operated follow-up steps because they require control of the relevant business accounts.
+Online appointment booking, estimates, live chat, customer accounts, payment, live or embedded Google reviews, fabricated testimonials, rating claims, specific review counts, automatic machine translation, additional language routes, guaranteed search or AI placement, separate service pages, and ongoing scheduled updates are not part of this first version. Search-engine account setup, Google Business Profile verification, and manual sitemap submission are separate owner-operated follow-up steps because they require control of the relevant business accounts.
