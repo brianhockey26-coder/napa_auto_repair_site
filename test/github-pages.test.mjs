@@ -21,4 +21,5 @@ test("workflow_tests_builds_and_deploys_pages", async () => {
   assert.match(workflow, /pages:\s*write/);
   assert.match(workflow, /id-token:\s*write/);
   assert.match(workflow, /environment:\s*\n\s*name:\s*github-pages/);
+  assert.match(workflow, /enablement:\s*true/);
 });
