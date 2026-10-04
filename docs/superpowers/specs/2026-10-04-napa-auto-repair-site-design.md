@@ -36,9 +36,15 @@ The page will feel like a trustworthy neighborhood garage rather than a generic 
 
 The site is presentation-only and requires no authentication, forms, database, tracking, uploads, or stored customer data. The primary interactions are section navigation, smooth in-page movement, telephone links, and external Google Maps and Google review links. External links will fail gracefully by leaving all business information readable on the page.
 
-## Accessibility and Metadata
+## Accessibility, Search, and AI Discoverability
 
-The implementation will use semantic page landmarks, logical heading order, keyboard-accessible links, visible focus states, sufficient contrast, descriptive link labels, and responsive text sizing. The page title, description, favicon, and local-business-oriented metadata will identify Napa Auto Repair and its North Brunswick location.
+The implementation will use semantic page landmarks, logical heading order, keyboard-accessible links, visible focus states, sufficient contrast, descriptive link labels, and responsive text sizing. The page title, description, canonical URL, favicon, and local-business-oriented metadata will identify Napa Auto Repair and its North Brunswick location.
+
+The public page and its meaningful assets will be accessible without authentication, CAPTCHA, `noindex`, or crawler-blocking rules. A root `robots.txt` will explicitly allow mainstream search and answer-engine discovery crawlers, including Googlebot and OpenAI's OAI-SearchBot, and will reference a root XML sitemap. The sitemap will contain the final canonical public URL.
+
+The page will include valid JSON-LD using the most specific appropriate Schema.org local-business type, expected to be `AutoRepair`. It will repeat only visible, owner-supplied facts: business name, canonical URL, telephone number, postal address, opening hours, service area, and general repair category. It will not publish an `aggregateRating`, review count, fabricated reviews, geographic coordinates, prices, or other facts that have not been verified.
+
+Visible copy will state the shop name, location, services, hours, and contact information in direct language so text-only crawlers and AI agents can understand the business without executing an interaction. Search and AI discoverability will be optimized, but ranking, indexing, citation, or recommendation by any third-party system cannot be guaranteed.
 
 ## Validation and Delivery
 
@@ -50,7 +56,12 @@ Before publication, verify:
 - Directions and Google review links target the correct business or a precise Google Maps search for the supplied name and address.
 - The displayed address and hours match this specification.
 - The production site is publicly reachable without a login or sign-in prompt.
+- The production page returns a successful response to anonymous requests and contains no `noindex` directive.
+- `robots.txt` permits Googlebot and OAI-SearchBot and points to the deployed sitemap.
+- The sitemap uses the final public canonical URL.
+- The JSON-LD parses successfully and matches the business details visible on the page.
+- Search metadata, canonical URL, and structured data do not claim an unverified review count or rating aggregate.
 
 ## Out of Scope
 
-Online appointment booking, estimates, live chat, customer accounts, payment, fabricated testimonials, specific review counts, separate service pages, and ongoing scheduled updates are not part of this first version.
+Online appointment booking, estimates, live chat, customer accounts, payment, fabricated testimonials, specific review counts, guaranteed search or AI placement, separate service pages, and ongoing scheduled updates are not part of this first version. Search-engine account setup, Google Business Profile verification, and manual sitemap submission are separate owner-operated follow-up steps because they require control of the relevant business accounts.
