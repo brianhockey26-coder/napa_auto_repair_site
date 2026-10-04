@@ -62,8 +62,10 @@ svg { display: block; }
 
 .header-inner { min-height: 74px; display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
 
-.brand { display: inline-flex; align-items: center; flex: 0 0 auto; text-decoration: none; }
+.brand { display: inline-flex; align-items: center; flex: 0 0 auto; gap: 0.7rem; text-decoration: none; }
 .brand-logo { width: 142px; height: 58px; display: block; object-fit: contain; object-position: left center; }
+.brand-name { color: var(--cream); font-size: 0.82rem; font-weight: 900; letter-spacing: 0.075em; line-height: 1.05; text-transform: uppercase; white-space: nowrap; }
+.brand-name span { display: block; }
 .footer-brand .brand-logo { width: 124px; height: 54px; }
 
 .primary-nav { display: flex; align-items: center; gap: 2rem; margin-left: auto; }
@@ -195,7 +197,11 @@ footer { padding-block: 2rem; color: #b9c7d1; background: var(--navy-950); }
 }
 
 @media (max-width: 35rem) {
-  .brand-logo { width: 92px; height: 48px; }
+  .header-inner { gap: 0.7rem; }
+  .brand { gap: 0.25rem; }
+  .brand-logo { width: 72px; height: 44px; }
+  .brand-name { max-width: 54px; font-size: 0.56rem; letter-spacing: 0.025em; }
+  .header-tools { gap: 0.25rem; }
   .header-call { font-size: 0.7rem; }
   .language-switcher { padding: 0.15rem; }
   .language-switcher a { min-width: 29px; min-height: 28px; padding-inline: 0.28rem; font-size: 0.62rem; }

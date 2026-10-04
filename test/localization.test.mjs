@@ -47,6 +47,7 @@ test("language_switcher_links_equivalent_routes", async () => {
     assert.match(page, />中文<\/a>/);
     assert.match(page, /aria-current="page"/);
     assert.equal((page.match(/class="brand-logo"/g) ?? []).length, 2);
+    assert.equal((page.match(/<span class="brand-name"><span>Napa<\/span> <span>Auto Repair<\/span><\/span>/g) ?? []).length, 2);
   }
   assert.match(pages.en, /href="es\/"[^>]*>ES<\/a>/);
   assert.match(pages.en, /href="zh\/"[^>]*>中文<\/a>/);
@@ -103,7 +104,8 @@ test("mobile_header_protects_brand_and_language_controls", async () => {
   const css = await readFile(path.join(projectRoot, "src", "styles.css"), "utf8");
 
   assert.match(css, /\.brand\s*\{[^}]*flex:\s*0 0 auto/s);
-  assert.match(css, /@media\s*\(max-width:\s*35rem\)[\s\S]*\.brand-logo\s*\{[^}]*width:\s*92px/s);
+  assert.match(css, /@media\s*\(max-width:\s*35rem\)[\s\S]*\.brand-logo\s*\{[^}]*width:\s*72px/s);
+  assert.match(css, /@media\s*\(max-width:\s*35rem\)[\s\S]*\.brand-name\s*\{[^}]*max-width:\s*54px/s);
 });
 
 test("build_emits_multilingual_routes_and_sitemap", async () => {

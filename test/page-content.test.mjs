@@ -55,7 +55,9 @@ test("uses_the_shop_logo_in_header_and_footer", async () => {
   const { html, css } = await source();
 
   assert.equal((html.match(/<img class="brand-logo" src="assets\/napa-auto-repair-logo\.png" alt="">/g) ?? []).length, 2);
+  assert.equal((html.match(/<span class="brand-name"><span>Napa<\/span> <span>Auto Repair<\/span><\/span>/g) ?? []).length, 2);
   assert.match(css, /\.brand-logo\s*\{[^}]*object-fit:\s*contain/s);
+  assert.match(css, /\.brand-name\s*\{[^}]*color:\s*var\(--cream\)/s);
 });
 
 test("keeps_business_content_static", async () => {
