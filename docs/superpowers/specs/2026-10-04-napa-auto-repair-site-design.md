@@ -15,7 +15,7 @@ The primary audience is drivers in and around North Brunswick Township, New Jers
 - Phone: +1 (908) 416-6132
 - Hours: Monday through Saturday, 8:30 AM–6:00 PM; Sunday closed
 - Services: General auto repair services
-- Reputation statement supplied by the owner: All Google reviews are five stars
+- Reviews: Link visitors to the shop's current Google reviews without embedding or restating a rating
 
 ## Experience and Content
 
@@ -24,7 +24,7 @@ The site will be a lightweight, responsive single page with these sections:
 1. A compact sticky header with the shop name, section navigation, and a prominent tap-to-call action.
 2. A first-screen introduction positioning the shop as a dependable North Brunswick repair destination, with Call Now and Get Directions actions.
 3. A services overview covering representative general repair categories: diagnostics, routine maintenance, oil changes, brakes, tires, engine repair, suspension and steering, electrical systems, heating and air conditioning, and other common repair needs. The wording will make clear that customers can call about additional repair needs rather than implying an exhaustive service catalog.
-4. A trust section highlighting the owner-provided statement that the shop's Google reviews are all five stars. It will link to the shop's Google listing without inventing customer quotations or a review count.
+4. A trust section inviting visitors to see what customers are saying on Google. It will link to the shop's current Google reviews without embedding individual reviews or making a rating or review-count claim that could become stale.
 5. A visit section with the address, hours, Sunday closure, tap-to-call phone number, and Google Maps directions link.
 6. A concise footer repeating the essential contact details.
 
@@ -64,4 +64,4 @@ Before publication, verify:
 
 ## Out of Scope
 
-Online appointment booking, estimates, live chat, customer accounts, payment, fabricated testimonials, specific review counts, guaranteed search or AI placement, separate service pages, and ongoing scheduled updates are not part of this first version. Search-engine account setup, Google Business Profile verification, and manual sitemap submission are separate owner-operated follow-up steps because they require control of the relevant business accounts.
+Online appointment booking, estimates, live chat, customer accounts, payment, live or embedded Google reviews, fabricated testimonials, rating claims, specific review counts, guaranteed search or AI placement, separate service pages, and ongoing scheduled updates are not part of this first version. Search-engine account setup, Google Business Profile verification, and manual sitemap submission are separate owner-operated follow-up steps because they require control of the relevant business accounts.

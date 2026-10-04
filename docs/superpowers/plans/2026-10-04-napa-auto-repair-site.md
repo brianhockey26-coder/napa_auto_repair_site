@@ -17,7 +17,7 @@
 - Phone display: +1 (908) 416-6132; phone URI: `tel:+19084166132`.
 - Hours: Monday through Saturday, 8:30 AM–6:00 PM; Sunday closed.
 - Present general auto repair services without implying the displayed list is exhaustive.
-- State only the owner-supplied review claim that all Google reviews are five stars; do not invent quotations, a review count, or aggregate-rating schema.
+- Link to the shop's current Google reviews without embedding reviews or claiming a rating or review count.
 - The production site must be public without authentication, CAPTCHA, or `noindex`.
 - Search and AI discovery are optimized but never described as guaranteed.
 - Do not add booking, estimates, chat, accounts, payments, forms, tracking, persistence, or scheduled updates.
@@ -26,7 +26,7 @@
 
 - A visitor on a narrow phone viewport can read the first screen and use Call Now or Get Directions without horizontal scrolling; Task 1 asserts responsive rules and runs viewport QA.
 - A keyboard-only visitor can identify focus and reach every navigation and action link; Task 1 asserts semantic anchors and visible focus styling, then performs keyboard QA.
-- A text-only crawler can read the name, location, services, hours, phone, and review claim without JavaScript; Task 1 tests the generated HTML text.
+- A text-only crawler can read the name, location, services, hours, phone, and Google-reviews link context without JavaScript; Task 1 tests the generated HTML text.
 - A discovery crawler receives a successful public page, crawler permission, a canonical URL, and a matching sitemap URL; Tasks 2 and 3 test generated and deployed artifacts.
 - Structured data never contradicts visible business facts or invents rating details; Task 2 parses JSON-LD and compares exact values while asserting rating fields are absent.
 
@@ -46,7 +46,7 @@
 
 - [ ] **Step 1: Write the failing content and accessibility tests**
 
-Create tests named `renders_exact_business_facts`, `offers_primary_customer_actions`, `uses_semantic_accessible_structure`, `keeps_business_content_static`, and `includes_responsive_and_focus_styles`. Assert the source contains the exact name, address, display phone, `tel:+19084166132`, hours, representative general-repair categories, Google review wording, `main`/`nav`/heading landmarks, skip link, labeled external actions, `:focus-visible`, and a narrow-screen media query. Assert there is no form, login text, review quotation, aggregate rating, or script-dependent business copy.
+Create tests named `renders_exact_business_facts`, `offers_primary_customer_actions`, `uses_semantic_accessible_structure`, `keeps_business_content_static`, and `includes_responsive_and_focus_styles`. Assert the source contains the exact name, address, display phone, `tel:+19084166132`, hours, representative general-repair categories, neutral Google review wording, `main`/`nav`/heading landmarks, skip link, labeled external actions, `:focus-visible`, and a narrow-screen media query. Assert there is no form, login text, embedded review, rating claim, review quotation, aggregate rating, or script-dependent business copy.
 
 - [ ] **Step 2: Run the tests to verify they fail**
 
@@ -56,7 +56,7 @@ Expected: FAIL because the page and stylesheet do not exist.
 
 - [ ] **Step 3: Implement the page and visual system**
 
-Create a single-page layout with sticky header, hero, service categories, five-star Google review statement, visit/hours section, and footer. Use the approved deep navy, warm cream, and Napa-red palette; a crisp garage-inspired type hierarchy; responsive two-column-to-single-column layout; reduced-motion support; and embedded data-URI SVG favicon. Keep all important business copy in HTML and use only anchor links for interactions.
+Create a single-page layout with sticky header, hero, service categories, a neutral “See what customers are saying on Google” trust section linked to the current Google reviews, visit/hours section, and footer. Use the approved deep navy, warm cream, and Napa-red palette; a crisp garage-inspired type hierarchy; responsive two-column-to-single-column layout; reduced-motion support; and embedded data-URI SVG favicon. Keep all important business copy in HTML and use only anchor links for interactions.
 
 - [ ] **Step 4: Run tests and manual viewport/keyboard checks**
 
