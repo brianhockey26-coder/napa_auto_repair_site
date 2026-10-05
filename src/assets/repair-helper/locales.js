@@ -26,7 +26,8 @@ const ui={
  copy:t('Copy summary','Copiar resumen','复制摘要'),
  copied:t('Summary copied.','Resumen copiado.','摘要已复制。'),
  copyFail:t('Select the summary text and copy it manually.','Selecciona el resumen y cópialo manualmente.','请选择摘要文字并手动复制。'),
- past:t('You reported an earlier symptom. It still needs inspection; this does not confirm it is resolved.','El síntoma ocurrió antes. Aún necesita revisión; esto no confirma que esté resuelto.','您描述的是之前出现的症状，仍需检查，不能认定问题已解决。'),
+ past:t('Some symptoms happened earlier. Their guidance applies if they recur; inspection is still needed to confirm resolution.','Algunos síntomas ocurrieron antes. Su orientación aplica si vuelven; una revisión debe confirmar que estén resueltos.','部分症状之前出现过，相关紧急建议适用于再次出现时；仍需检查确认是否解决。'),
+ ifRecurs:t('For the earlier symptom, if it happens again:','Para el síntoma anterior, si vuelve a ocurrir:','对于之前的症状，如果再次发生：'),
  provisional:t('Some symptoms remain unclear. Describe them when you call; this guidance is provisional.','Algunos síntomas siguen sin aclararse. Descríbelos al llamar; esta orientación es provisional.','部分症状尚不明确，致电时请补充说明；建议仅供初步参考。'),
  emergency:t('If there is fire or immediate danger, get everyone away from the vehicle and traffic and call 911.','Si hay fuego o peligro inmediato, aléjense del vehículo y del tráfico y llamen al 911.','如有火灾或紧急危险，请让所有人远离车辆和车流，并拨打 911。'),
  serviceLink:t('Use the Repair Helper →','Usar la guía de reparación →','使用维修助手 →'),
@@ -43,7 +44,7 @@ const topics={brakes:t('Brakes','Frenos','刹车'),tires:t('Tires & vibration','
 const services={diagnostics:t('Diagnostics','Diagnóstico','故障诊断'),brakes:t('Brakes & Tires','Frenos y neumáticos','刹车与轮胎'),engine:t('Engine Repair','Reparación del motor','发动机维修'),suspension:t('Suspension & Steering','Suspensión y dirección','悬挂与转向'),electrical:t('Electrical & Climate','Electricidad y climatización','电气与空调'),maintenance:t('Oil & Maintenance','Aceite y mantenimiento','机油与保养')};
 const titles={
  safety:t('Is any of this happening right now?','¿Algo de esto sucede ahora mismo?','目前是否正在发生以下情况？'),
- timing:t('When does the main symptom happen?','¿Cuándo ocurre el síntoma principal?','主要症状何时出现？'),
+ timing:t('Are these symptoms happening now?','¿Estos síntomas suceden ahora?','这些症状目前是否仍在发生？'),
  onset:t('How did it begin?','¿Cómo empezó?','症状如何开始？'),
  frequency:t('When do you notice it most?','¿Cuándo lo notas más?','何时最容易出现？'),
  brakes:t('Which brake symptom best describes it?','¿Qué síntoma de frenos lo describe mejor?','哪种刹车症状最符合？'),
@@ -61,7 +62,7 @@ const titles={
 };
 const options={
  safety:{fire:t('Flames or immediate danger','Llamas o peligro inmediato','火焰或紧急危险'),control:t('Unable to brake or steer normally','No puedo frenar o dirigir normalmente','无法正常刹车或转向'),smoke:t('Heavy smoke or overheating','Mucho humo o sobrecalentamiento','大量烟雾或过热'),fuel:t('Strong fuel smell or fuel leak','Olor fuerte o fuga de combustible','强烈汽油味或燃油泄漏'),none:t('None of these','Nada de esto','以上均无')},
- timing:{now:t('Now or recurring recently','Ahora o se repite recientemente','正在发生或近期反复出现'),past:t('Earlier, not happening now','Antes; ahora no ocurre','之前发生，目前没有'),unknown:ui.unknown},
+ timing:{now:t('Now or recurring recently','Ahora o se repite recientemente','正在发生或近期反复出现'),past:t('All happened earlier; none are happening now','Todos ocurrieron antes; ninguno sucede ahora','均为之前发生，目前都没有'),unknown:ui.unknown},
  onset:{sudden:t('Suddenly','De repente','突然出现'),gradual:t('Gradually','Poco a poco','逐渐出现'),work:t('After recent repair or tire work','Después de una reparación o trabajo en neumáticos','近期维修或轮胎作业后'),impact:t('After a pothole or impact','Después de un bache o golpe','经过坑洞或撞击后')},
  frequency:{constant:t('Every time','Siempre','每次都出现'),sometimes:t('Occasionally','A veces','偶尔出现'),cold:t('Mostly when first starting / cold','Al arrancar / en frío','主要在刚启动或冷车时'),hot:t('Mostly after warming up','Después de calentarse','主要在热车后')},
  brakes:{failure:t('Reduced braking / cannot stop normally','Frena menos / no se detiene normalmente','制动力下降 / 无法正常停车'),pedal:t('Soft pedal or pedal sinks to the floor','Pedal blando o se hunde hasta el fondo','踏板变软或踩到底'),grind:t('Grinding or metal scraping','Roce metálico','金属磨擦声'),squeal:t('Squealing; no change in pedal feel','Chirrido; el pedal no cambió','尖叫声；踏板感觉未变'),vibrate:t('Shaking only when braking','Vibra solo al frenar','仅刹车时抖动')},

@@ -92,7 +92,10 @@ if(root){
   if(result.unresolved.length||result.unknown)mount.append(node('p',{class:'rh-message'},ui.provisional));
   mount.append(node('h4',{},ui.reasoning));
   const reasons=node('ul',{class:'rh-reasons'});
-  for(const key of result.reasons)reasons.append(node('li',{},copy.reasons[key]||copy.reasons.unknown));
+  for(const key of result.reasons){
+   const explanation=copy.reasons[key]||copy.reasons.unknown;
+   reasons.append(node('li',{},result.pastReasons.includes(key)?`${ui.ifRecurs} ${explanation}`:explanation));
+  }
   mount.append(reasons,node('h4',{},ui.possible));
   const serviceList=node('div',{class:'rh-service-list'});
   for(const id of result.services)serviceList.append(node('a',{href:'#services',class:'rh-service'},copy.services[id]));

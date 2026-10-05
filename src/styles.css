@@ -173,6 +173,7 @@ h1 em { color: var(--red); font-style: normal; }
 .rh-chip:has(input:checked) { border-color: var(--red); background: #fff2ef; }
 .rh-card input[type='checkbox'],.rh-card input[type='radio'] { accent-color: var(--red-dark); width: 17px; height: 17px; flex-shrink: 0; margin: 0; }
 .rh-card button { cursor: pointer; font: inherit; font-weight: 800; }
+.rh-card :focus-visible { outline-color: var(--red-dark); }
 .rh-secondary { min-height: 44px; padding: 0.65rem 0.8rem; color: var(--navy-900); background: var(--cream); border: 1px solid var(--line); border-radius: 7px; font-size: 0.83rem !important; }
 .rh-secondary:hover { border-color: #9aacae; background: #ece8df; }
 .rh-controls { display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap; margin-top: 1.4rem; }

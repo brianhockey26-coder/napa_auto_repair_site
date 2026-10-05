@@ -134,3 +134,27 @@ test('unknown timing cannot downgrade a severe symptom',()=>{
 test('an unexpected answer is treated as unanswered',()=>{
  assert.ok(assess({topics:['brakes'],answers:{safety:'none',brakes:'banana'}}).questions.includes('brakes'));
 });
+for(const text of ['The tire does not have a bulge','el neumático no tiene bulto','轮胎没有鼓包','brakes are not grinding']){
+ test(`embedded negation: ${text}`,()=>assert.equal(interpret(text).facts.length,0));
+}
+test('historical smoke does not become current because another symptom is current',()=>{
+ const r=assess({text:'Yesterday smoke, today brakes squeal'});
+ assert.equal(r.level,2);assert.equal(r.historical,true);
+});
+for(const text of ['oil pressure light only with engine off','luz de presion de aceite solo con motor apagado','发动机关闭时机油压力灯亮']){
+ test(`engine-off oil warning needs confirmation: ${text}`,()=>{
+  const r=assess({text});assert.notEqual(r.level,3);assert.ok(r.questions.includes('lights'));
+ });
+}
+test('current recurrence outranks earlier occurrence of the same hazard',()=>{
+ assert.equal(assess({text:'smoke yesterday, smoke now'}).level,3);
+});
+test('an explicit current independent hazard survives a past-main-symptom answer',()=>{
+ assert.equal(assess({text:'smoke now, brakes squeal yesterday',answers:{safety:'none',timing:'past'}}).level,3);
+});
+test('oil pressure without operating conditions is asked rather than assumed',()=>{
+ const r=assess({text:'oil pressure warning'});assert.equal(r.level,2);assert.ok(r.questions.includes('lights'));
+});
+test('historical explanation is marked for conditional wording',()=>{
+ assert.ok(assess({text:'overheating yesterday'}).pastReasons.includes('heat.hot'));
+});

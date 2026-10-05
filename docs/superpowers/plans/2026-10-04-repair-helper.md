@@ -50,3 +50,9 @@ Interfaces: consume Task 1 exports; mount on #repair-helper; service links selec
 
 Ruling: Proceed inline after writing this plan rather than asking for another approval. The user explicitly instructed expanding capabilities and coding into the main link.
 Ruling: Reuse the existing managed isolated worktree; it is clean and based on the deployed commit plus the approved specification.
+
+Task 1: complete. Initial missing-module test observed before implementation; 86 decision and locale tests now pass. Expanded coverage includes contradictory inputs, per-fact timing, embedded multilingual negation, and guarded oil-pressure recognition.
+Task 2: complete. All 111 site tests pass and the production build succeeds. Real Chrome checks cover every language, editing, reset, urgent results, clipboard failure, literal markup, mobile width, static fallback, and absence of external requests. Browser QA script: scripts/verify-helper.mjs; requires Playwright and Chrome, with optional NAPA_PLAYWRIGHT_MODULE for an installed module path.
+Final review: independent read-only reviewer identified three Important findings (embedded negation, mixed historical timing, oil-pressure operating conditions). All reproduced in failing tests and corrected in the release fix pass; no Minor findings reported.
+Reviewer exclusions: layout, keyboard behavior, browser permissions, and public availability are covered by the executor's browser/release checks. Automotive suggestions are general inspection guidance, not a professional diagnostic certification; the helper explicitly states its limit and avoids model-specific repair instructions.
+Task 3: verified implementation awaiting final commit, publishing, and live-domain verification.
