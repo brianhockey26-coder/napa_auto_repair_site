@@ -105,6 +105,22 @@ test("hero_hours_show_the_localized_sunday_closure", async () => {
   }
 });
 
+test("localized_service_cards_expand_with_a_phone_action", async () => {
+  const pages = await sources();
+  const callsToAction = {
+    en: "Call about this service",
+    es: "Llamar sobre este servicio",
+    "zh-Hans": "咨询此项服务",
+  };
+
+  for (const [language, page] of Object.entries(pages)) {
+    assert.equal((page.match(/<details class="service-card">/g) ?? []).length, 6);
+    assert.equal((page.match(/<h3 class="service-title">/g) ?? []).length, 6);
+    assert.equal((page.match(/class="service-cta" href="tel:\+19084166132"/g) ?? []).length, 6);
+    assert.match(page, new RegExp(callsToAction[language]));
+  }
+});
+
 test("translations_avoid_rating_claims_and_forms", async () => {
   const pages = await sources();
 

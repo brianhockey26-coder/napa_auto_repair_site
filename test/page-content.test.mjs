@@ -83,6 +83,29 @@ test("keeps_business_content_static", async () => {
   assert.doesNotMatch(html, /<script[^>]+src=/i);
 });
 
+test("service_cards_expand_to_reveal_a_call_action_without_hover_motion", async () => {
+  const { html, css } = await source();
+
+  assert.equal((html.match(/<details class="service-card">/g) ?? []).length, 6);
+  assert.equal((html.match(/<summary>/g) ?? []).length, 6);
+  assert.equal((html.match(/<h3 class="service-title">/g) ?? []).length, 6);
+  assert.equal((html.match(/class="service-detail"/g) ?? []).length, 6);
+  assert.equal((html.match(/class="service-cta" href="tel:\+19084166132"/g) ?? []).length, 6);
+  assert.doesNotMatch(html, /service-card featured/);
+  assert.match(css, /\.service-card\[open\]\s*\{/);
+  assert.match(css, /\.service-card summary\s*\{[^}]*padding-inline-end:/s);
+  assert.match(css, /\.service-card summary\s*\{[^}]*padding-bottom:/s);
+  assert.doesNotMatch(css, /\.service-card:hover\s*\{[^}]*transform:/s);
+});
+
+test("buttons_use_restrained_nonzoom_interactions", async () => {
+  const { css } = await source();
+
+  assert.match(css, /\.button\s*\{[^}]*border-radius:/s);
+  assert.match(css, /\.button\s*\{[^}]*box-shadow:/s);
+  assert.doesNotMatch(css, /\.button[^,{]*:hover\s*\{[^}]*transform:\s*scale/s);
+});
+
 test("includes_responsive_and_focus_styles", async () => {
   const { html, css } = await source();
 
