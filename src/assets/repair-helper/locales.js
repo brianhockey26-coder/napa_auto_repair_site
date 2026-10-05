@@ -1,6 +1,19 @@
 // English / Spanish / Simplified Chinese. All copy is bundled, not translated remotely.
+import { detailedQuiz } from './quiz.js';
+import { causeCopy } from './cause-copy.js';
 const t=(en,es,zh)=>[en,es,zh];
 const ui={
+ reply:t('Reply in your own words','Responde con tus propias palabras','用自己的话回答'),
+ replyPlaceholder:t('Type an answer, or ask what could cause this…','Escribe una respuesta o pregunta qué podría causarlo…','输入回答，或询问可能是什么原因……'),
+ shortcuts:t('Or choose a suggested answer','O elige una respuesta sugerida','也可以选择以下回答'),
+ clarifyReply:t('I could not confidently match that to this question. Please add detail or use a suggested answer.','No pude relacionar eso con esta pregunta con seguridad. Añade detalles o elige una respuesta sugerida.','我无法确定这段话对应哪个回答。请补充细节，或选择下面的回答。'),
+ possibleProblems:t('Problems that could fit','Posibles problemas compatibles','可能符合的原因'),
+ causeLimit:t('These are possibilities, not a diagnosis. Other causes may fit too; testing is needed before replacing parts.','Son posibilidades, no un diagnóstico. Puede haber otras causas; hay que comprobar antes de cambiar piezas.','这些只是可能原因，不是诊断。也可能有其他原因，更换零件前需要检查确认。'),
+ evidence:t('Why it fits your answers','Por qué coincide con tus respuestas','与你的回答相符的地方'),
+ check:t('What a mechanic would check','Qué comprobaría un mecánico','技师会检查什么'),
+ noCauses:t('I need more symptom details before suggesting a possible cause.','Necesito más detalles antes de sugerir una causa.','需要更多症状信息才能提出可能原因。'),
+ more:t('Continue the conversation','Seguir la conversación','继续回答问题'),
+ you:t('You','Tú','你'),
  title:t('Repair Helper','Guía de reparación','维修助手'),
  intro:t('Describe what you notice. Answer a few useful questions and find your next step.','Describe qué notas. Responde algunas preguntas útiles y conoce el siguiente paso.','描述车辆异常，回答几个相关问题，了解下一步建议。'),
  label:t('What is happening with your vehicle?','¿Qué le pasa a tu vehículo?','车辆有什么异常？'),
@@ -141,7 +154,9 @@ const reasons={
  'noise.exhaust':t('Exhaust rattle can involve mounts, heat shields, or damaged exhaust parts.','Traqueteo del escape puede involucrar soportes, protectores térmicos o piezas dañadas.','排气异响可能涉及支架、隔热板或排气部件损伤。'),
 };
 function pick(value,index){return Array.isArray(value)?value[index]:Object.fromEntries(Object.entries(value).map(([key,v])=>[key,pick(v,index)]));}
+for(const [id,q] of Object.entries(detailedQuiz)){titles[id]=q.title;options[id]=q.options;}
+reasons['leakType.fuel']=reasons['leaks.fuel'];
 export const locales=Object.fromEntries(['en','es','zh'].map((language,index)=>{
  const selectedUI=Object.fromEntries(Object.entries(ui).map(([key,v])=>[key,['levels','actions'].includes(key)?v.map(triple=>triple[index]):v[index]]));
- return [language,{ui:selectedUI,topics:pick(topics,index),services:pick(services,index),reasons:pick(reasons,index),questions:Object.fromEntries(Object.keys(titles).map(id=>[id,{title:titles[id][index],options:{...pick(options[id],index),unknown:ui.unknown[index]}}]))}];
+ return [language,{ui:selectedUI,causes:pick(causeCopy,index),topics:pick(topics,index),services:pick(services,index),reasons:pick(reasons,index),questions:Object.fromEntries(Object.keys(titles).map(id=>[id,{title:titles[id][index],options:{...pick(options[id],index),unknown:ui.unknown[index]}}]))}];
 }));

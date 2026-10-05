@@ -99,7 +99,7 @@ test('editing clears stale hazard when current facts no longer contain it',()=>{
 });
 test('question budget is bounded even with all topics',()=>{
  const r=assess({topics:['brakes','tires','steering','lights','heat','start','engine','leaks','smell','climate','maintenance','noise']});
- assert.ok(r.questions.length<=6); assert.equal(r.questions[0],'safety');
+ assert.ok(r.questions.length<=14); assert.equal(r.questions[0],'safety');
 });
 test('supported locales cover every question, option, reason, and service',()=>{
  for(const locale of Object.values(locales)){

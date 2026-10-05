@@ -285,3 +285,10 @@ footer { padding-block: 2rem; color: #b9c7d1; background: var(--navy-950); }
   html { scroll-behavior: auto; }
   *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
 }
+/* Local repair conversation: readable history and evidence-backed possibilities. */
+.rh-chat{display:grid;gap:.65rem;margin:1.25rem 0;max-height:22rem;overflow:auto;padding:.25rem}
+.rh-bubble{margin:0;white-space:pre-line;background:#f0f4f8;border:1px solid #dce4ed;border-radius:14px 14px 14px 3px;padding:.9rem 1rem;max-width:90%;line-height:1.65;color:#24354b}
+.rh-you{justify-self:end;background:#e9f1fc;border-color:#cbdcf3;border-radius:14px 14px 3px 14px}
+.rh-cause{border:1px solid #d9e2ec;border-left:4px solid var(--accent,#b7212c);background:#fff;border-radius:12px;padding:1.2rem;margin:1rem 0;line-height:1.7}
+.rh-cause h4{margin:0 0 .5rem;font-size:1.15rem}.rh-cause h5{font-size:.95rem;margin:1rem 0 .35rem}.rh-cause p{margin:.4rem 0}.rh-cause ul{padding-left:1.25rem}
+#rh-reply{width:100%;box-sizing:border-box;font:inherit;padding:.85rem;border:1px solid #aab9cc;border-radius:10px;margin:.5rem 0}

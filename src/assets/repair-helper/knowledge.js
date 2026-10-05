@@ -1,4 +1,5 @@
 // Stable IDs; translations never determine urgency. Levels: routine, soon, prompt, stop.
+import { detailedQuiz } from './quiz.js';
 const data = {
  safety: {fire:[3,'diagnostics'],control:[3,'brakes'],smoke:[3,'diagnostics'],fuel:[3,'diagnostics'],none:[0,null],unknown:[2,'diagnostics']},
  timing: {now:[0,null],past:[0,null],unknown:[0,null]},
@@ -17,8 +18,10 @@ const data = {
  maintenance: {oil:[0,'maintenance'],inspect:[0,'diagnostics'],trip:[0,'maintenance'],interval:[0,'maintenance']},
  noise: {knock:[2,'engine'],belt:[1,'engine'],wheel:[2,'brakes'],exhaust:[1,'diagnostics']},
 };
+for(const [id,q] of Object.entries(detailedQuiz))data[id]=Object.fromEntries(Object.keys(q.options).map(answer=>[answer,[id==='leakType'&&answer==='fuel'?3:0,id==='leakType'&&answer==='fuel'?'diagnostics':null]]));
 export const rules = Object.fromEntries(Object.entries(data).map(([q,items])=>[q,Object.fromEntries(Object.entries(items).map(([answer,[level,service]])=>[answer,{level,service,reason:`${q}.${answer}`}]))]));
 export const questions = Object.fromEntries(Object.entries(data).map(([id,items])=>[id,{topic:['safety','timing','onset','frequency'].includes(id)?null:id,options:[...Object.keys(items),...(!('unknown' in items)?['unknown']:[])]}]));
+for(const [id,q] of Object.entries(detailedQuiz)){questions[id].topic=null;questions[id].owner=q.owner;}
 export const priority = ['smell','heat','brakes','tires','steering','lights','leaks','engine','start','noise','climate','maintenance'];
 export const topicPatterns = {
  brakes:/\bbrak(?:e|es|ing)\b|\bfrenos?\b|刹车|煞車|制动|制動/giu,

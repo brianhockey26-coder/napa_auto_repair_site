@@ -1,4 +1,6 @@
 import { questions, rules, priority, topicPatterns, factPatterns } from './knowledge.js';
+import { branchQuestions,MAX_QUESTIONS } from './quiz.js';
+import { possibleProblems } from './diagnosis.js';
 
 function normalize(text) {
  return String(text??'').slice(0,1000).normalize('NFD').replace(/\p{M}/gu,'').toLowerCase().replace(/[’‘]/g,"'");
@@ -58,7 +60,8 @@ export function assess({text='',topics=[],answers={}}={}) {
  const historical=globalPast||recognized.facts.some(f=>f.past&&!validAnswers[f.question]);
  let level=0; const reasons=[],services=new Set(),pastReasons=new Set(); let emergency=false;
  for(const [id,answer] of Object.entries(chosen)){
-  if(id!=='safety'&&(!questions[id]?.topic||!selected.includes(id)))continue;
+  const owner=questions[id]?.topic||questions[id]?.owner;
+  if(id!=='safety'&&(!owner||!selected.includes(owner)))continue;
   const rule=rules[id]?.[answer];
   if(!rule){level=Math.max(level,2);reasons.push('unknown');services.add('diagnostics');continue;}
   let risk=rule.level;
@@ -82,8 +85,9 @@ export function assess({text='',topics=[],answers={}}={}) {
  const followups=[];
  if(selected.some(id=>['brakes','tires','steering','noise'].includes(id)))followups.push('onset');
  if(selected.some(id=>['start','engine','climate'].includes(id)))followups.push('frequency');
- const pending=['safety','timing',...sorted,...followups].filter(id=>!Object.hasOwn(validAnswers,id));
- const questionList=pending.slice(0,Math.max(0,6-Object.keys(validAnswers).length));
+ const detail=branchQuestions(chosen,selected);
+ const pending=['safety','timing',...sorted,...detail,...followups].filter(id=>!Object.hasOwn(validAnswers,id));
+ const questionList=pending.slice(0,Math.max(0,MAX_QUESTIONS-Object.keys(validAnswers).length));
  const unresolved=selected.filter(id=>!chosen[id]||chosen[id]==='unknown');
  if(unresolved.length||recognized.facts.some(f=>f.uncertain&&!validAnswers[f.question])){
   level=Math.max(level,2);if(!reasons.includes('unknown'))reasons.push('unknown');services.add('diagnostics');
@@ -91,5 +95,7 @@ export function assess({text='',topics=[],answers={}}={}) {
  const unknown=selected.length===0;
  if(unknown){level=Math.max(level,2);if(!reasons.includes('unknown'))reasons.push('unknown');services.add('diagnostics');}
  if(!reasons.length)reasons.push('unknown');
- return {level,reasons:[...new Set(reasons)],pastReasons:[...pastReasons],services:[...services],questions:questionList,unknown,historical,emergency,conflict,topics:selected,unresolved};
+ const relevant=Object.fromEntries(Object.entries(chosen).filter(([id])=>questions[id]?.owner?detail.includes(id):selected.includes(id)||['onset','frequency'].includes(id)));
+ const possibilities=possibleProblems(relevant);
+ return {level,reasons:[...new Set(reasons)],pastReasons:[...pastReasons],services:[...services],questions:questionList,unknown,historical,emergency,conflict,topics:selected,unresolved,possibilities};
 }
