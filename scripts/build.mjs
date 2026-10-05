@@ -1,4 +1,4 @@
-import { copyFile, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { copyFile, cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -93,6 +93,7 @@ export async function buildSite({ origin, outputDir }) {
     ...renderedRoutes.map((route) => writeFile(path.join(resolvedOutput, route.output), route.html, "utf8")),
     copyFile(path.join(projectRoot, "src", "styles.css"), path.join(resolvedOutput, "styles.css")),
     copyFile(path.join(projectRoot, "src", "assets", "napa-auto-repair-logo.png"), path.join(resolvedOutput, "assets", "napa-auto-repair-logo.png")),
+    cp(path.join(projectRoot, "src", "assets", "repair-helper"), path.join(resolvedOutput, "assets", "repair-helper"), { recursive: true }),
     writeFile(path.join(resolvedOutput, "robots.txt"), robots, "utf8"),
     writeFile(path.join(resolvedOutput, "sitemap.xml"), sitemap, "utf8"),
   ]);

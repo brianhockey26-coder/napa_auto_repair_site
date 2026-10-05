@@ -80,7 +80,8 @@ test("keeps_business_content_static", async () => {
   assert.doesNotMatch(html, /five[- ]star|5[- ]star|★★★★★/i);
   assert.doesNotMatch(html, /class="review-stars"/i);
   assert.doesNotMatch(html, /<blockquote[\s>]|class="review-card"/i);
-  assert.doesNotMatch(html, /<script[^>]+src=/i);
+  const scripts=[...html.matchAll(/<script[^>]+src="([^"]+)"/g)].map(match=>match[1]);
+  assert.deepEqual(scripts,['assets/repair-helper/app.js']);
 });
 
 test("service_cards_expand_to_reveal_a_call_action_without_hover_motion", async () => {

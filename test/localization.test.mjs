@@ -29,7 +29,7 @@ test("language_routes_are_complete_static_pages", async () => {
     assert.match(page, /<section[^>]+id="reviews"/);
     assert.match(page, /<section[^>]+id="visit"/);
     assert.match(page, /<h1[\s>]/);
-    assert.doesNotMatch(page, /<script[^>]+src=/i);
+    assert.match(page, /<script type="module" src="(?:\.\.\/)?assets\/repair-helper\/app.js"/);
   }
   assert.match(pages.es, /Reparaciones confiables/i);
   assert.match(pages.es, /Servicios/);
