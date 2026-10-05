@@ -89,6 +89,22 @@ test("translations_preserve_business_facts_and_actions", async () => {
   }
 });
 
+test("hero_hours_show_the_localized_sunday_closure", async () => {
+  const pages = await sources();
+  const expected = {
+    en: "Closed on Sundays",
+    es: "Cerrado los domingos",
+    "zh-Hans": "周日休息",
+  };
+
+  for (const [language, page] of Object.entries(pages)) {
+    const heroHours = page.match(/<div class="hours-summary">([\s\S]*?)<\/div>\s*<\/div>\s*<div class="hero-art"/);
+    assert.ok(heroHours, `${language} has a hero hours summary`);
+    assert.match(heroHours[1], new RegExp(expected[language]));
+    assert.match(heroHours[1], /class="status-dot status-dot-closed"/);
+  }
+});
+
 test("translations_avoid_rating_claims_and_forms", async () => {
   const pages = await sources();
 

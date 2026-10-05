@@ -109,9 +109,11 @@ h1 em { color: var(--red); font-style: normal; }
 .button-light { color: var(--navy-950); background: white; }
 .button-light:hover { background: var(--cream); }
 
-.hours-strip { margin-top: 2.4rem; display: flex; align-items: center; gap: 0.7rem; color: #bccbd5; font-size: 0.9rem; }
+.hours-summary { margin-top: 2.4rem; display: grid; gap: 0.7rem; }
+.hours-strip { display: flex; align-items: center; gap: 0.7rem; color: #bccbd5; font-size: 0.9rem; }
 .hours-strip strong { color: white; }
 .status-dot { width: 10px; height: 10px; background: #65cb82; border-radius: 50%; box-shadow: 0 0 0 5px rgba(101,203,130,.13); }
+.status-dot-closed { background: #d7a254; box-shadow: 0 0 0 5px rgba(215,162,84,.13); }
 
 .hero-art { position: relative; min-height: 520px; display: flex; align-items: flex-end; }
 .service-badge { position: absolute; top: 4.5rem; right: 0; z-index: 3; width: 240px; padding: 1.3rem; color: var(--navy-950); background: var(--cream); box-shadow: var(--shadow); }
