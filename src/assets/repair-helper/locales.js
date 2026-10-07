@@ -3,8 +3,8 @@ import { detailedQuiz } from './quiz.js';
 import { causeCopy } from './cause-copy.js';
 const t=(en,es,zh)=>[en,es,zh];
 const ui={
- reply:t('Reply in your own words','Responde con tus propias palabras','用自己的话回答'),
- replyPlaceholder:t('Type an answer, or ask what could cause this…','Escribe una respuesta o pregunta qué podría causarlo…','输入回答，或询问可能是什么原因……'),
+ reply:t('Add a detail in your own words','Agregue un detalle con sus propias palabras','用自己的话补充信息'),
+ replyPlaceholder:t('For example: when it happens, a warning light, or recent service…','Por ejemplo: cuándo sucede, una luz de advertencia o un servicio reciente…','例如：发生条件、警告灯或近期维修情况……'),
  shortcuts:t('Or choose a suggested answer','O elige una respuesta sugerida','也可以选择以下回答'),
  clarifyReply:t('I could not confidently match that to this question. Please add detail or use a suggested answer.','No pude relacionar eso con esta pregunta con seguridad. Añade detalles o elige una respuesta sugerida.','我无法确定这段话对应哪个回答。请补充细节，或选择下面的回答。'),
  possibleProblems:t('Problems that could fit','Posibles problemas compatibles','可能符合的原因'),

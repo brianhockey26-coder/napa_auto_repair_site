@@ -3,6 +3,7 @@ import { questions,rules } from './knowledge.js';
 import { locales } from './locales.js';
 import { matchReply } from './chat.js';
 import { MAX_QUESTIONS } from './quiz.js';
+import { buildAdvisorBrief } from './advisor.js';
 
 const root=document.querySelector('#repair-helper');
 if(root){
@@ -118,6 +119,7 @@ if(root){
  }
  function renderResult(){
   clear();const result=assess(state);
+  const brief=buildAdvisorBrief(result);
   const heading=node('h3',{class:'rh-result-title',tabindex:'-1'},ui.levels[result.level]);
   const status=node('div',{class:`rh-status rh-level-${result.level}`});
   status.append(node('span',{'aria-hidden':'true'},result.level===3?'!':result.level===2?'↗':'✓'),heading,node('p',{},ui.actions[result.level]));
@@ -136,6 +138,19 @@ if(root){
    for(const id of possibility.evidence)evidence.append(node('li',{},`${copy.questions[id].title} ${copy.questions[id].options[state.answers[id]]||copy.questions[id].options[interpret(state.text).facts.find(f=>f.question===id)?.answer]||''}`));
    card.append(evidence,node('h5',{},ui.check),node('p',{},cause.check));mount.append(card);
   }
+  const advisor=node('section',{class:`rh-advisor rh-advisor-${brief.mode}`,'aria-labelledby':'rh-advisor-title'});
+  advisor.append(node('h4',{id:'rh-advisor-title'},brief.mode==='safety'?copy.advisor.caution:copy.advisor.heading));
+  if(brief.mode==='safety')advisor.append(node('p',{class:'rh-advisor-caution'},copy.advisor.safety[brief.caution]));
+  else {
+   advisor.append(node('p',{class:'rh-advisor-service'},`${copy.advisor.service}: ${copy.services[brief.service]}`));
+   const checklist=node('div',{class:'rh-advisor-group'});checklist.append(node('h5',{},copy.advisor.checklist));
+   const list=node('ul');for(const item of brief.checklist)list.append(node('li',{},copy.advisor.checklistItems[item]));checklist.append(list);
+   const questionsForShop=node('div',{class:'rh-advisor-group'});questionsForShop.append(node('h5',{},copy.advisor.questions));
+   const questionList=node('ul');for(const item of brief.questions)questionList.append(node('li',{},copy.advisor.questionItems[item]));questionsForShop.append(questionList);
+   advisor.append(checklist,questionsForShop);
+   if(brief.caution)advisor.append(node('p',{class:'rh-advisor-caution'},copy.advisor.cautions[brief.caution]));
+  }
+  mount.append(advisor);
   if(result.questions.length&&!result.emergency)mount.append(button(ui.more,()=>{state.continueDetails=true;renderQuestion();},true));
   mount.append(node('h4',{},ui.reasoning));
   const reasons=node('ul',{class:'rh-reasons'});
@@ -156,7 +171,8 @@ if(root){
   const label=node('label',{for:'rh-summary',class:'rh-label'},ui.summary);
   const summary=node('textarea',{id:'rh-summary',rows:'5'});
   const answerLines=state.history.map(id=>`${copy.questions[id].title} ${replies[id]||copy.questions[id].options[state.answers[id]]}`);
-  summary.value=[state.vehicle,state.text,state.topics.map(t=>copy.topics[t]).join(' · '),...answerLines,ui.possibleProblems,...result.possibilities.map(p=>copy.causes[p.id].title),ui.causeLimit,ui.levels[result.level]].filter(Boolean).join('\n');
+  const advisorLines=brief.mode==='safety'?[copy.advisor.safety[brief.caution]]:[`${copy.advisor.service}: ${copy.services[brief.service]}`,...brief.checklist.map(item=>copy.advisor.checklistItems[item]),...brief.questions.map(item=>copy.advisor.questionItems[item])];
+  summary.value=[state.vehicle,state.text,state.topics.map(t=>copy.topics[t]).join(' · '),...answerLines,ui.possibleProblems,...result.possibilities.map(p=>copy.causes[p.id].title),ui.causeLimit,copy.advisor.heading,...advisorLines,ui.levels[result.level]].filter(Boolean).join('\n');
   const controls=node('div',{class:'rh-controls'});
   controls.append(button(ui.copy,async()=>{
    try{await navigator.clipboard.writeText(summary.value);message(ui.copied);}

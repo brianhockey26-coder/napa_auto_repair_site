@@ -151,6 +151,16 @@ h1 em { color: var(--red); font-style: normal; }
 .service-cta { min-height: 42px; padding: 0.65rem 0.85rem; display: inline-flex; align-items: center; gap: 0.55rem; color: white; background: var(--navy-900); border-radius: 6px; box-shadow: 0 7px 16px rgba(7,24,39,.16); font-size: 0.78rem; font-weight: 900; text-decoration: none; }
 .service-cta:hover { background: var(--red-dark); }
 
+.service-standards { background: var(--paper); border-block: 1px solid #e8e3da; }
+.standards-layout { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 5rem; align-items: start; }
+.standards-intro h2 { margin: 0 0 1.25rem; color: var(--navy-900); font-size: clamp(2.15rem,4.2vw,3.8rem); letter-spacing: -0.055em; line-height: 1.02; }
+.standards-intro > p:last-child { max-width: 40ch; margin: 0; color: var(--muted); }
+.standards-list { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+.standards-list li { display: grid; grid-template-columns: 3.2rem 1fr; gap: 1rem; padding: 1.4rem 0; border-bottom: 1px solid var(--line); }
+.standards-list > li > span { color: var(--red-dark); font-size: .73rem; font-weight: 900; letter-spacing: .13em; }
+.standards-list h3 { margin: 0 0 .3rem; color: var(--navy-900); font-size: 1.02rem; }
+.standards-list p { margin: 0; color: var(--muted); font-size: .94rem; }
+
 .repair-helper { background: var(--paper); scroll-margin-top: 95px; }
 .rh-layout { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 4rem; align-items: start; }
 .rh-intro h2 { font-size: clamp(2.5rem, 4.6vw, 4.2rem); letter-spacing: -0.05em; color: var(--navy-900); margin-bottom: 1.5rem; }
@@ -292,3 +302,13 @@ footer { padding-block: 2rem; color: #b9c7d1; background: var(--navy-950); }
 .rh-cause{border:1px solid #d9e2ec;border-left:4px solid var(--accent,#b7212c);background:#fff;border-radius:12px;padding:1.2rem;margin:1rem 0;line-height:1.7}
 .rh-cause h4{margin:0 0 .5rem;font-size:1.15rem}.rh-cause h5{font-size:.95rem;margin:1rem 0 .35rem}.rh-cause p{margin:.4rem 0}.rh-cause ul{padding-left:1.25rem}
 #rh-reply{width:100%;box-sizing:border-box;font:inherit;padding:.85rem;border:1px solid #aab9cc;border-radius:10px;margin:.5rem 0}
+.rh-advisor { margin: 1.6rem 0; padding: 1.25rem; border: 1px solid #cbd8e3; border-radius: 12px; background: #f6f9fc; }
+.rh-advisor h4 { margin: 0 0 .8rem; color: var(--navy-900); font-size: 1.08rem; }
+.rh-advisor h5 { margin: 1rem 0 .35rem; color: var(--navy-900); font-size: .84rem; letter-spacing: .03em; text-transform: uppercase; }
+.rh-advisor-service { margin: 0; color: var(--ink); font-weight: 800; }
+.rh-advisor-group ul { margin: 0; padding-left: 1.25rem; color: #405365; font-size: .9rem; }
+.rh-advisor-group li + li { margin-top: .36rem; }
+.rh-advisor-caution { margin: 1rem 0 0; padding-top: .9rem; border-top: 1px solid #cbd8e3; color: var(--navy-900); font-weight: 750; }
+.rh-advisor-safety { border-color: #d99689; background: #fff4f1; }
+.rh-advisor-safety .rh-advisor-caution { margin-top: 0; padding-top: 0; border-top: 0; }
+@media (max-width:48rem) { .standards-layout { grid-template-columns: 1fr; gap: 2rem; } .standards-list li { grid-template-columns: 2.6rem 1fr; } }
