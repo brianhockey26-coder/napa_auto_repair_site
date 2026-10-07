@@ -38,6 +38,11 @@ try{
   await page.locator('.rh-result-title').waitFor();
   assert.equal(await page.locator('.rh-result-title').textContent(),expected);
   assert.match(await page.locator('#rh-summary').inputValue(),/squeal|Chirrido|尖叫/i);
+  assert.equal(await page.locator('.rh-advisor').count(),1);
+  if(route==='/'){
+   assert.match(await page.locator('.rh-advisor').textContent(),/Prepare for your visit/);
+   assert.match(await page.locator('#rh-summary').inputValue(),/Service area to discuss/);
+  }
   assert.equal(await page.locator('.rh-controls a[href="tel:+19084166132"]').count(),1);
   // Edit and elevate the brake symptom, then reset and ensure answers are cleared.
   await page.locator('.rh-controls-muted button').first().click();
@@ -78,6 +83,8 @@ try{
  await page.goto(origin+'/');await page.locator('.rh-topics input[value="smell"]').check();await next();
  await answer('none');await answer('now');await answer('burn');await reply('I see flames, can I drive?');
  assert.equal(await page.locator('.rh-emergency').count(),1);
+ assert.equal(await page.locator('.rh-advisor-safety').count(),1);
+ assert.equal(await page.locator('.rh-advisor-group').count(),0);
  console.log('PASS long-input hazard and fire after earlier mild answer');
  for(const [route,none,now,soft] of [['/es/','ninguno de esos','ahora','el pedal esta blando'],['/zh/','都没有','现在','踏板很软']]){
   await page.goto(origin+route);await page.locator('.rh-topics input[value="brakes"]').check();await next();
@@ -125,6 +132,8 @@ try{
  assert.equal(await page.locator('.rh-topics input[value="brakes"]').isChecked(),true);
  await page.locator('#repair-helper').screenshot({path:path.join(artifacts,'en-mobile-start.png')});
  await page.setViewportSize({width:1440,height:1000});await page.goto(origin+'/');
+ assert.equal(await page.locator('.service-standards').count(),1);
+ assert.match(await page.locator('.service-standards').textContent(),/A practical approach to vehicle service/);
  await page.locator('#repair-helper').screenshot({path:path.join(artifacts,'en-desktop-start.png')});
  // Site remains useful when scripting is disabled.
  const nojs=await browser.newContext({javaScriptEnabled:false});

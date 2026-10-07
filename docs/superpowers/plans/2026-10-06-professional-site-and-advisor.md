@@ -39,25 +39,25 @@
 - Consumes: current static site sections and all existing visible business facts.
 - Produces: crawler-visible, professional service/visit/helper language and a `.service-standards` section on every route.
 
-- [ ] **Step 1: Write failing static-page assertions**
+- [x] **Step 1: Write failing static-page assertions**
 
 Assert every route contains a local-language service-standard heading, a formal helper description, the exact phone/address/hours, and no removed casual hero/helper phrases.
 
-- [ ] **Step 2: Run the targeted static-page tests to verify they fail**
+- [x] **Step 2: Run the targeted static-page tests to verify they fail**
 
 Run: `node --test test/page-content.test.mjs test/localization.test.mjs test/discoverability.test.mjs`
 Expected: FAIL because the professional service-standard content is absent.
 
-- [ ] **Step 3: Replace casual copy and add static service standards**
+- [x] **Step 3: Replace casual copy and add static service standards**
 
 Use one short three-item expectations panel per route: evaluation, findings/next steps, and call-before-arrival. Keep claims procedural and non-promissory.
 
-- [ ] **Step 4: Run targeted static-page tests to verify they pass**
+- [x] **Step 4: Run targeted static-page tests to verify they pass**
 
 Run: `node --test test/page-content.test.mjs test/localization.test.mjs test/discoverability.test.mjs`
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/index.html src/es/index.html src/zh/index.html test/page-content.test.mjs test/localization.test.mjs test/discoverability.test.mjs
@@ -75,29 +75,29 @@ git commit -m "feat: refine professional site copy and service standards"
 - Consumes: `{level, emergency, topics, services, possibilities, unresolved}` from `assess(state)`.
 - Produces: `buildAdvisorBrief(result) -> {service, checklist, questions, caution}` using stable locale-independent IDs.
 
-- [ ] **Step 1: Write failing advisor tests**
+- [x] **Step 1: Write failing advisor tests**
 
 Add tests for routine maintenance, braking vibration, unresolved symptom, prompt/safety concern, and active emergency. Assert emergency returns only a safety/assistance caution, and unknown topic returns a generic diagnostic preparation list.
 
-- [ ] **Step 2: Run advisor tests to verify they fail**
+- [x] **Step 2: Run advisor tests to verify they fail**
 
 Run: `node --test test/repair-helper-detail.test.mjs`
 Expected: FAIL because `advisor.js` and `buildAdvisorBrief` do not exist.
 
-- [ ] **Step 3: Implement `buildAdvisorBrief(result)`**
+- [x] **Step 3: Implement `buildAdvisorBrief(result)`**
 
 Map stable services/topics to preparation IDs. For level 3/emergency, omit normal checklist/questions and return an assistance-first caution. For other results, emit at most three checklist and three question IDs; use a generic diagnostic brief when facts are unresolved.
 
-- [ ] **Step 4: Add localized advisor copy**
+- [x] **Step 4: Add localized advisor copy**
 
 Add `advisor` labels and item maps to `locales.js` through the same English/Spanish/Chinese `pick` pattern used by cause copy.
 
-- [ ] **Step 5: Run advisor tests to verify they pass**
+- [x] **Step 5: Run advisor tests to verify they pass**
 
 Run: `node --test test/repair-helper-detail.test.mjs`
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/assets/repair-helper/advisor.js src/assets/repair-helper/locales.js test/repair-helper-detail.test.mjs
@@ -116,29 +116,29 @@ git commit -m "feat: add repair advisor visit preparation"
 - Consumes: `buildAdvisorBrief(assess(state))` and `locales[lang].advisor`.
 - Produces: an accessible result section with preparation checklist, questions for the shop, and conservative caution handling.
 
-- [ ] **Step 1: Write failing build/static assertions**
+- [x] **Step 1: Write failing build/static assertions**
 
 Assert the assistant imports advisor logic, references the preparation heading, and retains no script-required site facts in the static page.
 
-- [ ] **Step 2: Run the targeted helper build test to verify it fails**
+- [x] **Step 2: Run the targeted helper build test to verify it fails**
 
 Run: `node --test test/repair-helper-build.test.mjs`
 Expected: FAIL because advisor rendering is absent.
 
-- [ ] **Step 3: Render advisor content with `textContent`**
+- [x] **Step 3: Render advisor content with `textContent`**
 
 Call `buildAdvisorBrief(result)` only in `renderResult`. Render a semantic labelled section after possible causes. Suppress routine preparation when the advisor brief is emergency/safety-first. Include brief IDs in the copyable summary.
 
-- [ ] **Step 4: Refine result and service-standard styling**
+- [x] **Step 4: Refine result and service-standard styling**
 
 Use the existing tokens and compact cards; add clear spacing, ordered checklist styling, and 375px-safe wrapping. Do not add hover-only interactions or auto-zoom effects.
 
-- [ ] **Step 5: Run the targeted helper build test to verify it passes**
+- [x] **Step 5: Run the targeted helper build test to verify it passes**
 
 Run: `node --test test/repair-helper-build.test.mjs`
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/assets/repair-helper/app.js src/assets/repair-helper/locales.js src/styles.css test/repair-helper-build.test.mjs
@@ -155,16 +155,16 @@ git commit -m "feat: present tailored service advisor brief"
 - Consumes: published static output from `scripts/build.mjs` and the completed advisor UI.
 - Produces: regression evidence, a published GitHub Pages release, and public-domain verification.
 
-- [ ] **Step 1: Extend browser verification**
+- [x] **Step 1: Extend browser verification**
 
 Add normal and urgent advisor-brief assertions in English, and verify Spanish/Chinese route rendering, mobile width, call link, literal-markup safety, no external assistant requests, and no-JavaScript fallback.
 
-- [ ] **Step 2: Run the full test suite and build**
+- [x] **Step 2: Run the full test suite and build**
 
 Run: `node --test && node scripts/build.mjs --origin https://napaautorepairnj.com/`
 Expected: all tests pass and `dist` is generated.
 
-- [ ] **Step 3: Run real-browser verification**
+- [x] **Step 3: Run real-browser verification**
 
 Run: `NAPA_PLAYWRIGHT_MODULE=/Users/brianmiao/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs node scripts/verify-helper.mjs`
 Expected: English, Spanish, Chinese, mobile, urgency, no-JS, and no-external-request checks pass.
