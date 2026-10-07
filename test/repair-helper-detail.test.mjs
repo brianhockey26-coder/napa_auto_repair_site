@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { assess } from '../src/assets/repair-helper/engine.js';
 import { matchReply } from '../src/assets/repair-helper/chat.js';
 import { locales } from '../src/assets/repair-helper/locales.js';
+import { buildAdvisorBrief } from '../src/assets/repair-helper/advisor.js';
 
 test('braking vibration identifies rotor variation with evidence and an inspection plan',()=>{
  const r=assess({topics:['brakes'],answers:{safety:'none',timing:'now',brakes:'vibrate',vibrationWhen:'braking',vibrationWhere:'steering'}});
@@ -81,3 +82,30 @@ test('idle-only vibration excludes brake-disc hypothesis',()=>{
 });
 for(const text of ['yesterday and today','it happened yesterday but now it is back','昨天有，现在仍然有','It happened yesterday, and happens now'])test(`mixed timing remains current: ${text}`,()=>assert.equal(matchReply('timing',text).answer,'now'));
 test('fire recognition precedes driving-question intent',()=>assert.equal(matchReply('safety','I see flames, can I drive?').answer,'fire'));
+
+test('routine maintenance receives a focused visit-preparation brief',()=>{
+ const brief=buildAdvisorBrief(assess({topics:['maintenance'],answers:{maintenance:'oil'}}));
+ assert.deepEqual(brief,{mode:'prepare',service:'maintenance',checklist:['vehicle','history','schedule'],questions:['interval','findings'],caution:null});
+});
+
+test('braking concern prepares useful observations for an inspection',()=>{
+ const brief=buildAdvisorBrief(assess({topics:['brakes'],answers:{brakes:'vibrate',vibrationWhen:'braking'}}));
+ assert.equal(brief.mode,'prepare');assert.equal(brief.service,'brakes');
+ assert.ok(brief.checklist.includes('when'));assert.ok(brief.questions.includes('cause'));
+});
+
+test('unresolved concern uses a conservative diagnostic preparation brief',()=>{
+ const brief=buildAdvisorBrief(assess({topics:['brakes'],answers:{brakes:'unknown'}}));
+ assert.equal(brief.mode,'prepare');assert.equal(brief.service,'diagnostics');
+ assert.deepEqual(brief.checklist,['vehicle','timeline','warnings']);
+});
+
+test('active emergency contains only emergency guidance',()=>{
+ const brief=buildAdvisorBrief(assess({topics:['smell'],answers:{safety:'fire'}}));
+ assert.deepEqual(brief,{mode:'safety',service:null,checklist:[],questions:[],caution:'emergency'});
+});
+
+test('level-three assistance concern contains no routine preparation',()=>{
+ const brief=buildAdvisorBrief(assess({topics:['brakes'],answers:{brakes:'pedal'}}));
+ assert.deepEqual(brief,{mode:'safety',service:null,checklist:[],questions:[],caution:'assistance'});
+});
