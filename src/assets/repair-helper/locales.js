@@ -59,7 +59,7 @@ const advisor={
  heading:t('Prepare for your visit','Prepárese para la visita','做好到店准备'),
  service:t('Service area to discuss','Área de servicio para comentar','建议沟通的服务方向'),
  checklist:t('Useful details to bring or note','Información útil para preparar o anotar','建议携带或记录的信息'),
- questions:t('Questions to discuss with the shop','可向维修店咨询的问题','可向维修店咨询的问题'),
+ questions:t('Questions to discuss with the shop','Preguntas para comentar con el taller','可向维修店咨询的问题'),
  caution:t('Important next step','Siguiente paso importante','重要的下一步'),
  safety:{emergency:t('Move away from the vehicle and traffic, then call 911. Do not return to inspect the vehicle.','Aléjese del vehículo y del tráfico, luego llame al 911. No vuelva a inspeccionar el vehículo.','请远离车辆和车流，并拨打 911。请勿返回自行检查车辆。'),assistance:t('Stop safely and arrange professional assistance. Do not continue driving to the shop.','Deténgase de forma segura y solicite asistencia profesional. No continúe conduciendo hasta el taller.','请安全停车并安排专业救援。请勿继续驾驶到店。')},
  cautions:{prompt:t('Arrange a prompt inspection and note any change in the symptom before the visit.','Programe una revisión pronta y anote cualquier cambio antes de la visita.','请尽快安排检查，并记录到店前症状是否发生变化。'),historical:t('If the symptom returns, use the earlier guidance and describe when it last occurred.','Si el síntoma regresa, siga la orientación anterior y explique cuándo ocurrió por última vez.','如症状再次出现，请参照前述建议，并说明上次发生的时间。')},

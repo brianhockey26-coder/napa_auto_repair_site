@@ -10,7 +10,8 @@ const preparation={
 // This layer prepares a shop conversation; it never changes the engine's risk decision.
 export function buildAdvisorBrief(result={}){
  if(result.emergency||result.level>=3)return {mode:'safety',service:null,checklist:[],questions:[],caution:result.emergency?'emergency':'assistance'};
- const service=result.unresolved?.length?'diagnostics':result.services?.[0]||'diagnostics';
+ const requested=result.unresolved?.length?'diagnostics':result.services?.[0];
+ const service=Object.hasOwn(preparation,requested)?requested:'diagnostics';
  const detail=preparation[service]||preparation.diagnostics;
  return {mode:'prepare',service,checklist:detail.checklist,questions:detail.questions,caution:result.level>=2?'prompt':result.historical?'historical':null};
 }

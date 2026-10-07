@@ -109,3 +109,12 @@ test('level-three assistance concern contains no routine preparation',()=>{
  const brief=buildAdvisorBrief(assess({topics:['brakes'],answers:{brakes:'pedal'}}));
  assert.deepEqual(brief,{mode:'safety',service:null,checklist:[],questions:[],caution:'assistance'});
 });
+
+test('unsupported service uses the complete diagnostic preparation fallback',()=>{
+ const brief=buildAdvisorBrief({level:2,services:['unsupported-service'],unresolved:[]});
+ assert.deepEqual(brief,{mode:'prepare',service:'diagnostics',checklist:['vehicle','timeline','warnings'],questions:['findings','nextStep'],caution:'prompt'});
+});
+
+test('Spanish advisor labels remain Spanish',()=>{
+ assert.equal(locales.es.advisor.questions,'Preguntas para comentar con el taller');
+});
