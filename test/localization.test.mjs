@@ -31,9 +31,9 @@ test("language_routes_are_complete_static_pages", async () => {
     assert.match(page, /<h1[\s>]/);
     assert.match(page, /<script type="module" src="(?:\.\.\/)?assets\/repair-helper\/app.js"/);
   }
-  assert.match(pages.es, /Reparaciones confiables/i);
+  assert.match(pages.es, /Servicio profesional/i);
   assert.match(pages.es, /Servicios/);
-  assert.match(pages["zh-Hans"], /可靠维修/);
+  assert.match(pages["zh-Hans"], /专业服务/);
   assert.match(pages["zh-Hans"], /服务项目/);
 });
 
@@ -129,6 +129,21 @@ test("translations_avoid_rating_claims_and_forms", async () => {
     assert.doesNotMatch(page, /aggregateRating|reviewCount|ratingValue/i);
     assert.doesNotMatch(page, /five[- ]star|5[- ]star|★★★★★/i);
     assert.doesNotMatch(page, /五星好评|cinco estrellas/i);
+  }
+});
+
+test("localized routes present formal service standards", async () => {
+  const pages = await sources();
+  const expected = {
+    en: ["A practical approach to vehicle service.", "Understand the concern. Prepare for the visit."],
+    es: ["Un enfoque práctico para el servicio de su vehículo.", "Entienda el problema. Prepárese para la visita."],
+    "zh-Hans": ["以务实方式处理您的车辆服务。", "了解车辆情况，做好到店准备。"],
+  };
+
+  for (const [language, phrases] of Object.entries(expected)) {
+    const page = pages[language];
+    assert.match(page, /<section class="service-standards section"/);
+    for (const phrase of phrases) assert.ok(page.includes(phrase), `${language} includes ${phrase}`);
   }
 });
 

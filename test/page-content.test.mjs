@@ -84,6 +84,20 @@ test("keeps_business_content_static", async () => {
   assert.deepEqual(scripts,['assets/repair-helper/app.js']);
 });
 
+test("uses_formal_service_advisor_copy_and_service_standards", async () => {
+  const { html } = await source();
+
+  assert.match(html, /Professional service\.<br><em>Clear communication\.<\/em>/);
+  assert.match(html, /Vehicle service advisor/);
+  assert.match(html, /Understand the concern\. Prepare for the visit\./);
+  assert.match(html, /<section class="service-standards section"/);
+  assert.match(html, /A practical approach to vehicle service\./);
+  assert.match(html, /Start with the concern/);
+  assert.match(html, /Review the findings/);
+  assert.match(html, /Plan the next step/);
+  assert.doesNotMatch(html, /Dependable repairs\.|A clearer next step\.|One shop for the road ahead\./);
+});
+
 test("service_cards_expand_to_reveal_a_call_action_without_hover_motion", async () => {
   const { html, css } = await source();
 
