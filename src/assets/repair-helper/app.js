@@ -32,7 +32,7 @@ if(root){
   if(!output){output=node('p',{'data-message':'',role:'status',class:'rh-message'});mount.append(output);}
   output.textContent=text;
  }
- function reset(){state={text:'',vehicle:'',topics:[],answers:{},history:[]};replies={};chatNotes=[];renderStart();focusTitle();}
+ function reset(){state={text:'',vehicle:'',topics:[],answers:{},history:[]};replies={};chatNotes=[];conversation=createConversationState(lang);renderStart();focusTitle();}
  function renderChat(){
   clear();
   const transcript=node('div',{class:'rh-chat-transcript','data-chat-transcript':'',role:'log','aria-live':'polite','aria-label':ui.title});
