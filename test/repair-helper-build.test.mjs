@@ -33,3 +33,14 @@ test('built site includes the service-advisor presentation layer',async()=>{
  assert.match(css,/\.rh-advisor\s*\{/);
  assert.match(css,/\.service-standards\s*\{/);
 });
+
+test('built site includes the local conversation transcript interface',async()=>{
+ const output=await mkdtemp(path.join(os.tmpdir(),'napa-chat-build-'));
+ await buildSite({origin:'https://napaautorepairnj.com/',outputDir:output});
+ const [app,css]=await Promise.all([
+  readFile(path.join(output,'assets/repair-helper/app.js'),'utf8'),
+  readFile(path.join(output,'styles.css'),'utf8'),
+ ]);
+ assert.match(app,/replyToMessage/);
+ assert.match(css,/rh-chat-transcript/);
+});

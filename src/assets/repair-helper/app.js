@@ -4,6 +4,7 @@ import { locales } from './locales.js';
 import { matchReply } from './chat.js';
 import { MAX_QUESTIONS } from './quiz.js';
 import { buildAdvisorBrief } from './advisor.js';
+import { createConversationState,replyToMessage } from './conversation.js';
 
 const root=document.querySelector('#repair-helper');
 if(root){
@@ -12,6 +13,7 @@ if(root){
  const mount=root.querySelector('[data-helper-mount]');
  let state={text:'',vehicle:'',topics:[],answers:{},history:[]};
  let replies={},chatNotes=[];
+ let conversation=createConversationState(lang);
  const node=(tag,attributes={},text)=>{
   const element=document.createElement(tag);
   for(const [key,value] of Object.entries(attributes))element.setAttribute(key,String(value));
@@ -31,7 +33,18 @@ if(root){
   output.textContent=text;
  }
  function reset(){state={text:'',vehicle:'',topics:[],answers:{},history:[]};replies={};chatNotes=[];renderStart();focusTitle();}
+ function renderChat(){
+  clear();
+  const transcript=node('div',{class:'rh-chat-transcript','data-chat-transcript':'',role:'log','aria-live':'polite','aria-label':ui.title});
+  const draw=()=>{transcript.replaceChildren();for(const item of conversation.messages){const text=item.role==='assistant'?item.text.split(' ').map(key=>copy.conversation.responses[key]||key).join(' '):item.text;transcript.append(node('p',{class:`rh-message rh-${item.role}`},text));}};
+  const input=node('textarea',{id:'rh-reply',rows:'3',maxlength:'1000',placeholder:ui.replyPlaceholder});
+  const send=raw=>{const turn=replyToMessage(conversation,raw,copy);conversation=turn.state;draw();input.value='';if(turn.kind==='safety')input.disabled=true;input.focus();};
+  input.addEventListener('keydown',event=>{if(event.key==='Enter'&&!event.shiftKey&&!event.isComposing){event.preventDefault();send(input.value);}});
+  const suggestions=node('div',{class:'rh-suggestions'});for(const prompt of ['My steering wheel shakes when I brake','My check engine light has code P0171','My car will not start'])suggestions.append(button(prompt,()=>send(prompt)));
+  mount.append(transcript,suggestions,node('label',{for:'rh-reply',class:'rh-label'},copy.conversation.welcome),input,button(ui.next,()=>send(input.value),true),call());draw();
+ }
  function renderStart(){
+  return renderChat();
   clear();
   const label=node('label',{for:'rh-description',class:'rh-label'},ui.label);
   const input=node('textarea',{id:'rh-description',rows:'3',maxlength:'1000',placeholder:ui.placeholder});input.value=state.text;
