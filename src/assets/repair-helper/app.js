@@ -36,7 +36,7 @@ if(root){
  function renderChat(){
   clear();
   const transcript=node('div',{class:'rh-chat-transcript','data-chat-transcript':'',role:'log','aria-live':'polite','aria-label':ui.title});
-  const draw=()=>{transcript.replaceChildren();for(const item of conversation.messages){const text=item.role==='assistant'?item.text.split(' ').map(key=>copy.conversation.responses[key]||key).join(' '):item.text;transcript.append(node('p',{class:`rh-message rh-${item.role}`},text));}};
+  const draw=()=>{transcript.replaceChildren();for(const item of conversation.messages){const text=item.role==='assistant'?item.text.split(' ').map(key=>copy.conversation.responses[key]||copy.reasons[key.slice(7)]||key).join(' '):item.text;transcript.append(node('p',{class:`rh-message rh-${item.role}`},text));}};
   const input=node('textarea',{id:'rh-reply',rows:'3',maxlength:'1000',placeholder:ui.replyPlaceholder});
   const send=raw=>{const turn=replyToMessage(conversation,raw,copy);conversation=turn.state;draw();input.value='';if(turn.kind==='safety')input.disabled=true;input.focus();};
   input.addEventListener('keydown',event=>{if(event.key==='Enter'&&!event.shiftKey&&!event.isComposing){event.preventDefault();send(input.value);}});

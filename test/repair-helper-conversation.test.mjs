@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { createConversationState,replyToMessage } from '../src/assets/repair-helper/conversation.js';
 import { locales } from '../src/assets/repair-helper/locales.js';
 
-const responseText=(turn,copy)=>turn.messageKeys.map(key=>copy.conversation.responses[key]||'').join(' ');
+const responseText=(turn,copy)=>turn.messageKeys.map(key=>copy.conversation.responses[key]||copy.reasons[key.slice(7)]||'').join(' ');
 
 test('free-text braking vibration keeps evidence and asks one useful next question',()=>{
  const turn=replyToMessage(createConversationState('en'),'My steering wheel shakes only when I brake',locales.en);
@@ -47,6 +47,12 @@ test('ambiguous chat text asks for clarification instead of inventing a symptom'
  const turn=replyToMessage(createConversationState('en'),'Something feels wrong with my car',locales.en);
  assert.equal(turn.kind,'clarify');
  assert.equal(turn.result.possibilities.length,0);
+});
+
+test('plain-language no-start concern gets a specific likely-system explanation',()=>{
+ const turn=replyToMessage(createConversationState('en'),'My car will not start',locales.en);
+ assert.equal(turn.state.answers.start,'crank');
+ assert.match(responseText(turn,locales.en),/fuel|ignition|engine/i);
 });
 
 test('conversation responses remain complete in every supported language',()=>{

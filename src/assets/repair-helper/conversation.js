@@ -41,5 +41,6 @@ export function replyToMessage(previous,raw,copy){
  if(intent==='urgency'||intent==='inspection')return response('reply',state,result,brief,[`action.${result.level}`],result.questions[0]||null,intent);
  if(intent==='summary')return response('summary',state,result,brief,['summary'],null,intent);
  if(!recognized.topics.length&&!Object.keys(facts).length)return response('clarify',state,result,brief,['clarify'],null,intent);
- return response('question',state,result,brief,[intent==='correction'?'correction':'acknowledge'],result.questions[0]||null,intent);
+ const detail=result.reasons.filter(key=>key!=='unknown').map(key=>`reason.${key}`);
+ return response('question',state,result,brief,[intent==='correction'?'correction':(detail[0]||'acknowledge'),`action.${result.level}`],result.questions[0]||null,intent);
 }
