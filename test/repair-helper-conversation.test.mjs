@@ -74,6 +74,18 @@ for(const [text,answer,reason] of [
  assert.ok(turn.messageKeys.includes(`reason.${reason}`)||turn.kind==='safety');
 });
 
+for(const [text,answer] of [
+ ['El coche no arranca pero gira normal','crank'],
+ ['La bateria esta muerta','silent'],
+ ['踩刹车时方向盘抖动','vibrate'],
+ ['高速行驶时车身发抖','speed'],
+ ['堵车时水温过高','hot'],
+ ['车内闻到汽油味','fuel'],
+])test(`multilingual local phrase recognition: ${text}`,()=>{
+ const turn=replyToMessage(createConversationState('en'),text,locales.en);
+ assert.ok(Object.values(turn.state.answers).includes(answer));
+});
+
 test('conversation responses remain complete in every supported language',()=>{
  for(const locale of Object.values(locales)){
   assert.ok(locale.conversation.summaryRequest);

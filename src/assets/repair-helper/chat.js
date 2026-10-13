@@ -61,6 +61,7 @@ export function extractChatAnswers(raw){
  if(/turns? over|cranks? but|will not fire|gira.*no arranca|转动.*不启动/u.test(normalize(text)))answers.start='crank';
  if(/puddle|pool of fluid|under the engine|charco|发动机.*积液/u.test(normalize(text)))answers.leaks='small';
  if(/a\/?c.*(?:warm|hot)|ac.*blows warm|aire.*caliente|空调.*不冷/u.test(normalize(text)))answers.climate='warm';
+ if(/temperature gauge.*red|gauge.*red|water temperature.*high|水温过高|水温高|高温报警/u.test(normalize(text)))answers.heat='hot';
  // A correction's explicit idle wording is stronger than the earlier braking cue.
  if(matchIntent(text)==='correction'&&/\bidle\b|\bralenti\b|怠速/u.test(normalize(text)))answers.vibrationWhen='idle';
  return answers;
