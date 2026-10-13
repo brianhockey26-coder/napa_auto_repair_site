@@ -61,6 +61,19 @@ test('common battery-dead wording identifies an electrical starting concern',()=
  assert.match(responseText(turn,locales.en),/battery|connections|starting/i);
 });
 
+for(const [text,answer,reason] of [
+ ['The engine turns over but will not fire','crank','start.crank'],
+ ['My dash lights go dim and it only clicks','click','start.click'],
+ ['The temperature gauge is in the red','hot','heat.hot'],
+ ['There is a puddle under the engine after parking','small','leaks.small'],
+ ['The wheel pulls left when I let go','pull','steering.pull'],
+ ['The AC blows warm but the fan is strong','warm','climate.warm'],
+])test(`expanded local phrase recognition: ${text}`,()=>{
+ const turn=replyToMessage(createConversationState('en'),text,locales.en);
+ assert.ok(Object.values(turn.state.answers).includes(answer));
+ assert.ok(turn.messageKeys.includes(`reason.${reason}`)||turn.kind==='safety');
+});
+
 test('conversation responses remain complete in every supported language',()=>{
  for(const locale of Object.values(locales)){
   assert.ok(locale.conversation.summaryRequest);

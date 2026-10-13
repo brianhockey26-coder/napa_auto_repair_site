@@ -58,6 +58,9 @@ export function extractChatAnswers(raw){
  }
  if(/battery.*dead|dead battery|bateria.*muerta|电瓶没电|电池没电/u.test(normalize(text)))answers.start='silent';
  else if(/(?:won.t|will not|cannot|can.t) start|no arranca|无法启动|打不着/u.test(normalize(text)))answers.start='crank';
+ if(/turns? over|cranks? but|will not fire|gira.*no arranca|转动.*不启动/u.test(normalize(text)))answers.start='crank';
+ if(/puddle|pool of fluid|under the engine|charco|发动机.*积液/u.test(normalize(text)))answers.leaks='small';
+ if(/a\/?c.*(?:warm|hot)|ac.*blows warm|aire.*caliente|空调.*不冷/u.test(normalize(text)))answers.climate='warm';
  // A correction's explicit idle wording is stronger than the earlier braking cue.
  if(matchIntent(text)==='correction'&&/\bidle\b|\bralenti\b|怠速/u.test(normalize(text)))answers.vibrationWhen='idle';
  return answers;
