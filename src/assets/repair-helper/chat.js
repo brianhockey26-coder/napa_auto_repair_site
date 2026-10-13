@@ -56,7 +56,8 @@ export function extractChatAnswers(raw){
   const answer=matchReply(question,text).answer;
   if(answer&&answer!=='unknown')answers[question]=answer;
  }
- if(/(?:won.t|will not|cannot|can.t) start|no arranca|无法启动|打不着/u.test(normalize(text)))answers.start='crank';
+ if(/battery.*dead|dead battery|bateria.*muerta|电瓶没电|电池没电/u.test(normalize(text)))answers.start='silent';
+ else if(/(?:won.t|will not|cannot|can.t) start|no arranca|无法启动|打不着/u.test(normalize(text)))answers.start='crank';
  // A correction's explicit idle wording is stronger than the earlier braking cue.
  if(matchIntent(text)==='correction'&&/\bidle\b|\bralenti\b|怠速/u.test(normalize(text)))answers.vibrationWhen='idle';
  return answers;

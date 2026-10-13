@@ -55,6 +55,12 @@ test('plain-language no-start concern gets a specific likely-system explanation'
  assert.match(responseText(turn,locales.en),/fuel|ignition|engine/i);
 });
 
+test('common battery-dead wording identifies an electrical starting concern',()=>{
+ const turn=replyToMessage(createConversationState('en'),'My battery is dead and the car will not start',locales.en);
+ assert.equal(turn.state.answers.start,'silent');
+ assert.match(responseText(turn,locales.en),/battery|connections|starting/i);
+});
+
 test('conversation responses remain complete in every supported language',()=>{
  for(const locale of Object.values(locales)){
   assert.ok(locale.conversation.summaryRequest);
