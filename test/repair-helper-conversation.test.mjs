@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import { createConversationState,replyToMessage } from '../src/assets/repair-helper/conversation.js';
 import { locales } from '../src/assets/repair-helper/locales.js';
 
+const responseText=(turn,copy)=>turn.messageKeys.map(key=>copy.conversation.responses[key]||'').join(' ');
+
 test('free-text braking vibration keeps evidence and asks one useful next question',()=>{
  const turn=replyToMessage(createConversationState('en'),'My steering wheel shakes only when I brake',locales.en);
  assert.equal(turn.kind,'question');
@@ -37,10 +39,28 @@ test('a supported diagnostic code receives a focused code response',()=>{
  assert.equal(turn.kind,'reply');
  assert.equal(turn.intent,'code');
  assert.equal(turn.state.answers.engineCode,'lean');
+ assert.match(responseText(turn,locales.en),/air|fuel|intake/i);
+ assert.match(responseText(turn,locales.en),/does not identify.*part/i);
 });
 
 test('ambiguous chat text asks for clarification instead of inventing a symptom',()=>{
  const turn=replyToMessage(createConversationState('en'),'Something feels wrong with my car',locales.en);
  assert.equal(turn.kind,'clarify');
  assert.equal(turn.result.possibilities.length,0);
+});
+
+test('conversation responses remain complete in every supported language',()=>{
+ for(const locale of Object.values(locales)){
+  assert.ok(locale.conversation.summaryRequest);
+  assert.ok(locale.conversation.responses['code.lean']);
+  assert.ok(locale.conversation.responses['action.2']);
+ }
+});
+
+test('Spanish and Chinese code responses do not fall back to English',()=>{
+ for(const [language,text] of [['es','Mi luz de motor tiene codigo P0171'],['zh','发动机故障灯报码 P0171']]){
+  const turn=replyToMessage(createConversationState(language),text,locales[language]);
+  assert.equal(turn.intent,'code');
+  assert.equal(/[A-Za-z]{5,}/.test(responseText(turn,locales[language])),language==='es');
+ }
 });
