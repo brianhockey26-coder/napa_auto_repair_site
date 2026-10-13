@@ -36,6 +36,30 @@ const patterns={
  noiseWhen:{turn:/turn|girar|转弯/,bumps:/bump|bache|颠簸/,speed:/speed|velocidad|速度/,start:/start|arranc|启动/},
  serviceHistory:{recent:/recent|just|reciente|刚|最近/,overdue:/overdue|never|vencido|从未|逾期/},
 };
+const intentPatterns={
+ causes:/what.*(?:caus|problem)|why.*(?:happen|shake)|what could.*(?:be|cause)|que.*(?:caus|problema)|por que.*(?:pasa|ocurre)|什么原因|为什么/u,
+ urgency:/can i drive|safe to drive|should i drive|puedo conducir|seguro conducir|能.*开|驾驶安全/u,
+ inspection:/what.*(?:check|inspect)|what.*mechanic|que.*(?:revis|comprob)|que.*mecanico|检查什么|技师.*检查/u,
+ summary:/summary|what.*tell.*(?:shop|mechanic)|prepare.*visit|resumen|que.*decir.*taller|到店.*准备|总结/u,
+ correction:/\b(?:correction|actually|instead|not when|only when)\b|\b(?:correccion|en realidad|no al)\b|更正|其实|不是.*而是/u,
+};
+export function matchIntent(raw){
+ const text=normalize(String(raw).slice(0,1000));
+ if(!text)return null;
+ if(/\bp\d{4}\b/u.test(text))return 'code';
+ return Object.entries(intentPatterns).find(([,pattern])=>pattern.test(text))?.[0]||null;
+}
+export function extractChatAnswers(raw){
+ const text=String(raw).slice(0,1000);
+ const answers={};
+ for(const question of ['safety','timing','brakes','tires','steering','start','engine','lights','heat','leaks','smell','climate','maintenance','noise','startingClick','electricalClue','vibrationWhen','vibrationWhere','engineCode']){
+  const answer=matchReply(question,text).answer;
+  if(answer&&answer!=='unknown')answers[question]=answer;
+ }
+ // A correction's explicit idle wording is stronger than the earlier braking cue.
+ if(matchIntent(text)==='correction'&&/\bidle\b|\bralenti\b|怠速/u.test(normalize(text)))answers.vibrationWhen='idle';
+ return answers;
+}
 export function matchReply(question,raw){
  const text=normalize(raw.slice(0,1000));
  if(!text)return {answer:null};
