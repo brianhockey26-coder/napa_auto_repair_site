@@ -28,8 +28,9 @@ test('built site includes the service-advisor presentation layer',async()=>{
   readFile(path.join(outputDir,'assets','repair-helper','app.js'),'utf8'),
   readFile(path.join(outputDir,'styles.css'),'utf8'),
  ]);
- assert.match(app,/buildAdvisorBrief/);
- assert.match(app,/rh-advisor/);
+ assert.match(app,/createChatController/);
+ const controller=await readFile(path.join(outputDir,'assets/repair-helper/chat-controller.js'),'utf8');
+ assert.match(controller,/copy\.causes/);
  assert.match(css,/\.rh-advisor\s*\{/);
  assert.match(css,/\.service-standards\s*\{/);
 });
@@ -41,6 +42,7 @@ test('built site includes the local conversation transcript interface',async()=>
   readFile(path.join(output,'assets/repair-helper/app.js'),'utf8'),
   readFile(path.join(output,'styles.css'),'utf8'),
  ]);
- assert.match(app,/replyToMessage/);
+ assert.match(app,/createChatController/);
+ for(const asset of ['chat-controller.js','local-model.js','model-copy.js'])assert.ok((await stat(path.join(output,'assets/repair-helper',asset))).isFile());
  assert.match(css,/rh-chat-transcript/);
 });
