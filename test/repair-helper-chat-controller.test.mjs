@@ -29,3 +29,17 @@ test('download quota failures explain browser storage while preserving chat',asy
  const c=createChatController({locale:'en',copy:locales.en,loadModel:async()=>{const error=Error('Quota exceeded');error.name='QuotaExceededError';throw error;}});
  await c.enableModel();assert.equal(c.snapshot().modelStatus,'storage');await c.send('My car will not start');assert.equal(c.snapshot().messages.length,2);
 });
+test('ordinary submission never interrupts an idle model',async()=>{
+ let interrupts=0;
+ const c=createChatController({locale:'en',copy:locales.en,loadModel:async()=>({interrupt(){interrupts++;},reply:async()=>{if(interrupts)throw Error('interrupted');return 'A battery inspection can help.';}})});
+ await c.enableModel();await c.send('My car will not start');assert.equal(interrupts,0);assert.equal(c.snapshot().messages.at(-1).kind,'model');
+});
+test('visit summary includes recorded vehicle and symptoms rather than asking again',async()=>{
+ let calls=0;
+ const c=createChatController({locale:'en',copy:locales.en,loadModel:async()=>({interrupt(){},reply:async()=>{calls++;return 'Possible battery issue.';}})});
+ await c.enableModel();await c.send('My car clicks rapidly and the dashboard dims when I try to start it. What could cause that?');
+ await c.send('It is a 2015 Honda Accord. What should I tell the mechanic?');
+ const reply=c.snapshot().messages.at(-1).content;
+ assert.match(reply,/2015 Honda Accord/);assert.match(reply,/clicks rapidly/);assert.match(reply,/battery/i);assert.equal(calls,1);
+ assert.doesNotMatch(reply,/I can prepare/);
+});

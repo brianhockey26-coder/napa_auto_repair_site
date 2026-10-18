@@ -5,7 +5,7 @@ const patterns={
  safety:{fire:/flames|on fire|llamas|着火/,control:/cannot (?:stop|steer)|brakes fail|no puedo frenar|失灵/,smoke:/smoke|humo|冒烟/,fuel:/fuel|gasoline|gasolina|汽油/},
  timing:{past:/yesterday|earlier|not now|ayer|antes|昨天|之前/,now:/now|today|currently|ahora|hoy|现在|今天/},
  brakes:{vibrate:/shak|vibrat|tiemb|抖|震/,pedal:/soft|floor|bland|软|到底/,failure:/not working|fail|no funcionan|失灵/,grind:/grind|metal|磨/,squeal:/squeal|squeak|chirr|rechin|尖叫/},
- tires:{flat:/flat|pinchad|爆胎/,damage:/bulge|cord|bulto|鼓包|露线/,pressure:/pressure|presion|胎压/,speed:/speed|highway|velocidad|高速/,wear:/wear|desgast|磨损/},
+ tires:{flat:/flat|pinchad|爆胎/,damage:/bulge|\bcords?\b|bulto|鼓包|露线/,pressure:/pressure|presion|胎压/,speed:/speed|highway|velocidad|高速/,wear:/wear|desgast|磨损/},
  steering:{loss:/cannot steer|locked|no puedo girar|失灵/,unstable:/unstable|inestable|不稳/,pull:/pull|desvia|跑偏/,clunk:/clunk|bump|golpe|颠簸/},
  start:{click:/click|clic|咔哒/,slow:/slow|lento|缓慢/,silent:/silent|nothing|nada|无反应/,crank:/crank.*(?:normal|but)|normal.*crank|gira.*normal|转动正常/,intermittent:/sometimes|intermittent|a veces|间歇/},
  engine:{idle:/idle|ralenti|怠速/,stall:/stall|apaga|熄火/,power:/power|potencia|动力/,shift:/shift|transmission|cambio|变速|顿挫/},
@@ -54,11 +54,12 @@ export function extractChatAnswers(raw){
  const text=String(raw).slice(0,1000);
  const answers={};
  for(const question of ['safety','timing','brakes','tires','steering','start','engine','lights','heat','leaks','smell','climate','maintenance','noise','startingClick','electricalClue','vibrationWhen','vibrationWhere','engineCode']){
-  const answer=matchReply(question,text).answer;
+  if(question==='leaks'&&!/leak|puddle|fluid|drip|fuel|gasoline|fuga|charco|liquido|gasolina|漏|积液|汽油/u.test(normalize(text)))continue;
+  const answer=matchReply(question,text,{factsOnly:true}).answer;
   if(answer&&answer!=='unknown')answers[question]=answer;
  }
  if(/battery.*dead|dead battery|bateria.*muerta|电瓶没电|电池没电/u.test(normalize(text)))answers.start='silent';
- else if(/(?:won.t|will not|cannot|can.t) start|no arranca|无法启动|打不着/u.test(normalize(text)))answers.start='crank';
+ else if(!answers.start&&(/(?:won.t|will not|cannot|can.t) start|no arranca|无法启动|打不着/u.test(normalize(text))))answers.start='crank';
  if(/turns? over|cranks? but|will not fire|gira.*no arranca|转动.*不启动/u.test(normalize(text)))answers.start='crank';
  if(/puddle|pool of fluid|under the engine|charco|发动机.*积液/u.test(normalize(text)))answers.leaks='small';
  if(/a\/?c.*(?:warm|hot)|ac.*blows warm|aire.*caliente|空调.*不冷/u.test(normalize(text)))answers.climate='warm';
@@ -67,11 +68,11 @@ export function extractChatAnswers(raw){
  if(matchIntent(text)==='correction'&&/\bidle\b|\bralenti\b|怠速/u.test(normalize(text)))answers.vibrationWhen='idle';
  return answers;
 }
-export function matchReply(question,raw){
+export function matchReply(question,raw,{factsOnly=false}={}){
  const text=normalize(raw.slice(0,1000));
  if(!text)return {answer:null};
- if(question!=='safety'&&/what.*(?:caus|problem)|why.*(?:happen|shake)|que.*(?:caus|problema)|什么原因|为什么/.test(text))return {answer:null,intent:'causes'};
- if(question!=='safety'&&/can i drive|safe to drive|puedo conducir|能.*开|驾驶安全/.test(text))return {answer:null,intent:'urgency'};
+ if(!factsOnly&&question!=='safety'&&/what.*(?:caus|problem)|why.*(?:happen|shake)|que.*(?:caus|problema)|什么原因|为什么/.test(text))return {answer:null,intent:'causes'};
+ if(!factsOnly&&question!=='safety'&&/can i drive|safe to drive|puedo conducir|能.*开|驾驶安全/.test(text))return {answer:null,intent:'urgency'};
  for(const locale of Object.values(locales))for(const [id,label] of Object.entries(locale.questions[question]?.options||{}))if(normalize(label)===text)return {answer:id};
  if(/not sure|don.t know|unsure|no se|no estoy segur|不确定|不知道/.test(text))return {answer:'unknown'};
  if(question==='engineCode'){

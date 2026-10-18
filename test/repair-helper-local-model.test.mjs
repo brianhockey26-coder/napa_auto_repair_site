@@ -13,6 +13,7 @@ test('active danger never produces a model prompt; routine history is bounded an
  const messages=buildModelMessages({locale:'zh',assessment:{level:1},guidance:'Inspection soon',messages:Array.from({length:40},()=>({role:'user',content:'x'.repeat(2000)}))});
  assert.match(messages[0].content,/Simplified Chinese/);
  assert.match(messages[0].content,/Inspection soon/);
+ assert.match(messages[0].content,/Use only the supplied/);
  assert.ok(messages.length<=7);
  assert.ok(messages.slice(1).every(m=>m.content.length<=1000));
 });

@@ -7,7 +7,7 @@ export function createChatController({locale='en',copy,loadModel=createLocalMode
  const snapshot=()=>({conversation,messages:[...messages],modelStatus,progress,generating,assessment});
  const emit=()=>{if(!disposed)onChange(snapshot());};
  const localize=key=>copy.conversation.responses[key]||(key.startsWith('reason.')?copy.reasons[key.slice(7)]:null)||(key.startsWith('question.')?copy.questions[key.slice(9)]?.title:null)||'';
- function invalidate(){token++;model?.interrupt();generating=false;}
+ function invalidate(){token++;if(generating)model?.interrupt();generating=false;}
  return {
   snapshot,
   async enableModel(){
@@ -26,6 +26,10 @@ export function createChatController({locale='en',copy,loadModel=createLocalMode
    invalidate();const ownToken=token;
    const turn=replyToMessage(conversation,text,copy);conversation=turn.state;assessment=turn.result;
    let guidance=turn.messageKeys.map(localize).filter(Boolean).join('\n\n');
+   if(turn.kind==='summary'){
+    const recorded=messages.filter(m=>m.role==='user').map(m=>m.content).slice(-8);
+    guidance=[copy.ui.summary,conversation.vehicle,...recorded,...turn.brief.checklist.map(item=>copy.advisor.checklistItems[item])].filter(Boolean).join('\n');
+   }
    // The urgency is always visible independently of generated text.
    if(!guidance.includes(copy.ui.actions[assessment.level]))guidance+='\n\n'+copy.ui.actions[assessment.level];
    if(assessment.emergency)guidance+='\n\n'+copy.ui.emergency;
@@ -34,7 +38,7 @@ export function createChatController({locale='en',copy,loadModel=createLocalMode
    }
    messages.push({role:'user',content:text},{role:'assistant',content:guidance,kind:turn.kind==='safety'?'safety':'advisor'});
    emit();
-   if(!model||modelStatus!=='ready'||(assessment.level>=3&&!assessment.historical))return;
+   if(turn.kind==='summary'||!model||modelStatus!=='ready'||(assessment.level>=3&&!assessment.historical))return;
    const context={locale,vehicle:conversation.vehicle,messages:messages.slice(0,-1).map(({role,content})=>({role,content})),assessment,guidance};
    generating=true;emit();
    // Serialize GPU work; newer input invalidates any older completion.
