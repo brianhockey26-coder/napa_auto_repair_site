@@ -18,7 +18,7 @@ export function createChatController({locale='en',copy,loadModel=createLocalMode
     const loaded=await loadModel({onProgress:value=>{progress=value;emit();}});
     if(disposed){await loaded.dispose?.();return;}
     model=loaded;modelStatus='ready';
-   }catch(error){modelStatus=/WebGPU unavailable/.test(error.message)?'unavailable':'error';}
+   }catch(error){modelStatus=error.name==='QuotaExceededError'||/quota/i.test(error.message)?'storage':/WebGPU unavailable/.test(error.message)?'unavailable':'error';}
    emit();
   },
   async send(raw){

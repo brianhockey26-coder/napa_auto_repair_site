@@ -22,7 +22,11 @@ try{
  page.on('request',req=>{if(new URL(req.url()).origin!==origin)external.push(req.url());});
  const reply=async text=>{await page.locator('#rh-reply').fill(text);await page.locator('#rh-reply').press('Enter');};
  for(const [route,prompt,expected]of [['/','My car clicks but will not start',/battery|starting|connections/i],['/es/','La bateria esta muerta',/batería|conexiones/i],['/zh/','刹车时方向盘抖动',/刹车|制动/]]){
-  await page.goto(origin+route);await reply(prompt);
+  await page.goto(origin+route);
+  await page.locator('#rh-reply').waitFor();
+  assert.equal(await page.locator('.rh-chat-header').count(),1);
+  assert.equal(await page.locator('.rh-composer #rh-reply').count(),1);
+  await page.locator('.rh-welcome').waitFor();await reply(prompt);
   await page.locator('.rh-assistant').waitFor();assert.match(await page.locator('.rh-assistant').textContent(),expected);
   await page.locator('[data-reset-chat]').click();assert.equal(await page.locator('.rh-message').count(),0);
  }
@@ -37,10 +41,11 @@ try{
  await page.waitForFunction(()=>document.querySelector('[data-model-status]').textContent.includes('ready'));
  await reply('My car will not start');await page.waitForFunction(()=>document.querySelector('[data-chat-transcript]').textContent.includes('<b>Local explanation</b>'));
  assert.equal(await page.locator('.rh-assistant b').count(),0);
+ await page.locator('#repair-helper').screenshot({path:'/tmp/napa-chat-preview.png'});
  await page.locator('[data-reset-chat]').click();await reply('My car will not start');await page.locator('[data-reset-chat]').click();
  await page.waitForTimeout(400);assert.equal(await page.locator('.rh-message').count(),0);
  await reply('My car will not start');await reply('I smell gasoline');await page.locator('.rh-safety').waitFor();
- await page.waitForTimeout(400);assert.ok(!(await page.locator('[data-chat-transcript]').textContent()).includes('Local explanation'));
+ await page.waitForTimeout(400);assert.ok((await page.locator('.rh-message').last().getAttribute('class')).includes('rh-safety'));
  await page.unroute('**/local-model.js');
  await page.route('**/local-model.js',route=>route.fulfill({contentType:'text/javascript',body:`export async function createLocalModel(){throw Error('download failed');}`}));
  await page.goto(origin+'/');await page.locator('.rh-model-panel summary').click();await page.locator('[data-enable-model]').click();

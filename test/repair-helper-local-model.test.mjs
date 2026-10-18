@@ -18,7 +18,7 @@ test('active danger never produces a model prompt; routine history is bounded an
 });
 test('runtime is only loaded on explicit creation, blank output rejected, output bounded',async()=>{
  let calls=0,content='';
- const runtime={prebuiltAppConfig:{model_list:[{model_id:MODEL_ID}]},CreateMLCEngine:async()=>({chat:{completions:{create:async()=>({choices:[{message:{content}}]})}},interruptGenerate(){},unload:async()=>{}})};
+ const runtime={prebuiltAppConfig:{model_list:[{model_id:MODEL_ID}]},CreateMLCEngine:async(id,options)=>{assert.equal(options.appConfig.useIndexedDBCache,true);return {chat:{completions:{create:async()=>({choices:[{message:{content}}]})}},interruptGenerate(){},unload:async()=>{}};}};
  assert.equal(calls,0);
  const model=await createLocalModel({environment,loadRuntime:async()=>{calls++;return runtime;}});
  assert.equal(calls,1);

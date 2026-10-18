@@ -23,7 +23,7 @@ export async function createLocalModel({onProgress=()=>{},loadRuntime=()=>import
  if(!supportsLocalModel(environment)||!await environment.navigator.gpu.requestAdapter())throw Error('WebGPU unavailable');
  const runtime=await loadRuntime();
  const modelId=selectLocalModel(runtime.prebuiltAppConfig.model_list);
- const engine=await runtime.CreateMLCEngine(modelId,{initProgressCallback:report=>onProgress(Math.max(0,Math.min(1,Number(report.progress)||0))) });
+ const engine=await runtime.CreateMLCEngine(modelId,{appConfig:{...runtime.prebuiltAppConfig,useIndexedDBCache:true},initProgressCallback:report=>onProgress(Math.max(0,Math.min(1,Number(report.progress)||0))) });
  return {
   async reply(context){
    const messages=buildModelMessages(context);if(!messages)throw Error('Safety bypass');

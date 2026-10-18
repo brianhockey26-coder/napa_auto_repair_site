@@ -25,3 +25,7 @@ test('reset discards generation and failed generation permits another message',a
  await c.send('My battery is dead');assert.equal(c.snapshot().generating,false);assert.equal(c.snapshot().modelStatus,'error');
  await c.send('it clicks');assert.ok(c.snapshot().messages.length>=4);
 });
+test('download quota failures explain browser storage while preserving chat',async()=>{
+ const c=createChatController({locale:'en',copy:locales.en,loadModel:async()=>{const error=Error('Quota exceeded');error.name='QuotaExceededError';throw error;}});
+ await c.enableModel();assert.equal(c.snapshot().modelStatus,'storage');await c.send('My car will not start');assert.equal(c.snapshot().messages.length,2);
+});

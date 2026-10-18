@@ -19,11 +19,16 @@ if(root){
  const progress=node('progress',{max:'1',value:'0','aria-label':mc.loading});progress.hidden=true;
  const thinking=node('p',{role:'status',class:'rh-small'},mc.thinking);thinking.hidden=true;
  const input=node('textarea',{id:'rh-reply',rows:'3',maxlength:'1000',placeholder:copy.ui.replyPlaceholder});
+ const welcome=node('div',{class:'rh-welcome'});
+ welcome.append(node('span',{class:'rh-avatar','aria-hidden':'true'},'N'),node('h3',{},copy.ui.title),node('p',{},copy.conversation.welcome));
+ transcript.append(welcome);
  let rendered=0;
  const controller=createChatController({locale:lang,copy,onChange:snapshot=>{
-  if(snapshot.messages.length<rendered){transcript.replaceChildren();rendered=0;}
+  if(snapshot.messages.length<rendered){transcript.replaceChildren(welcome);rendered=0;}
+  welcome.hidden=snapshot.messages.length>0;suggestions.hidden=snapshot.messages.length>0;
   for(const item of snapshot.messages.slice(rendered)){
    const bubble=node('div',{class:`rh-message rh-${item.role}${item.kind==='safety'?' rh-safety':''}`});
+   bubble.append(node('span',{class:'rh-sender'},item.role==='user'?({en:'You',es:'Usted',zh:'您'})[lang]:'Napa Auto Repair'));
    if(item.kind==='model')bubble.append(node('strong',{class:'rh-small'},mc.label));
    bubble.append(node('p',{},item.content));transcript.append(bubble);
   }
@@ -42,10 +47,18 @@ if(root){
  const suggestions=node('div',{class:'rh-suggestions'});
  for(const prompt of mc.examples)suggestions.append(button(prompt,()=>{void controller.send(prompt);input.focus();}));
  const controls=node('div',{class:'rh-controls'});
- const call=node('a',{class:'button button-primary',href:'tel:+19084166132'},copy.ui.call);
+ const call=node('a',{class:'rh-chat-call',href:'tel:+19084166132'},copy.ui.call);
  const reset=button(mc.reset,()=>{controller.reset();input.value='';input.focus();});reset.dataset.resetChat='';
- controls.append(button(mc.send,send,true),reset,call);
- mount.replaceChildren(modelPanel,transcript,suggestions,node('label',{for:'rh-reply',class:'rh-label'},copy.conversation.welcome),input,thinking,controls);
+ const header=node('div',{class:'rh-chat-header'});
+ const identity=node('div',{class:'rh-chat-identity'});identity.append(node('span',{class:'rh-avatar','aria-hidden':'true'},'N'),node('strong',{},copy.ui.title));
+ header.append(identity,reset);
+ const composer=node('div',{class:'rh-composer'});
+ const label=node('label',{for:'rh-reply',class:'rh-sr-only'},mc.send);
+ const sendButton=button('↑',send,true);sendButton.classList.add('rh-send');sendButton.setAttribute('aria-label',mc.send);
+ composer.append(label,input,sendButton);
+ controls.append(call);
+ mount.classList.add('rh-chat-window');
+ mount.replaceChildren(header,modelPanel,transcript,suggestions,thinking,composer,controls);
  const mapping=['lights','maintenance','brakes','engine','steering','climate'];
  document.querySelectorAll('.service-card').forEach((card,index)=>{
   const details=card.querySelector('.service-detail');if(!details)return;
