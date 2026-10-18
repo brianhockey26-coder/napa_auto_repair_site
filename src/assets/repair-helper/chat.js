@@ -37,16 +37,17 @@ const patterns={
  serviceHistory:{recent:/recent|just|reciente|刚|最近/,overdue:/overdue|never|vencido|从未|逾期/},
 };
 const intentPatterns={
- causes:/what.*(?:caus|problem)|why.*(?:happen|shake)|what could.*(?:be|cause)|que.*(?:caus|problema)|por que.*(?:pasa|ocurre)|什么原因|为什么/u,
+ causes:/what.*(?:caus|problem)|why.*(?:happen|shake)|why is.*(?:shak|vibrat)|what could.*(?:be|cause)|que.*(?:caus|problema)|por que.*(?:pasa|ocurre)|什么原因|为什么/u,
  urgency:/can i drive|safe to drive|should i drive|puedo conducir|seguro conducir|能.*开|驾驶安全/u,
  inspection:/what.*(?:check|inspect)|what.*mechanic|que.*(?:revis|comprob)|que.*mecanico|检查什么|技师.*检查/u,
- summary:/summary|what.*tell.*(?:shop|mechanic)|prepare.*visit|resumen|que.*decir.*taller|到店.*准备|总结/u,
+ summary:/summar(?:y|ize)|what.*tell.*(?:shop|mechanic)|tell the mechanic|prepare.*(?:visit|appointment)|resumen|que.*decir.*taller|到店.*准备|总结/u,
  correction:/\b(?:correction|actually|instead|not when|only when)\b|\b(?:correccion|en realidad|no al)\b|更正|其实|不是.*而是/u,
 };
 export function matchIntent(raw){
  const text=normalize(String(raw).slice(0,1000));
  if(!text)return null;
  if(/\bp\d{4}\b/u.test(text))return 'code';
+ if(intentPatterns.summary.test(text))return 'summary';
  return Object.entries(intentPatterns).find(([,pattern])=>pattern.test(text))?.[0]||null;
 }
 export function extractChatAnswers(raw){

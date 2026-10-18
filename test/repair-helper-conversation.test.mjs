@@ -75,6 +75,17 @@ test('vehicle details receive a useful acknowledgement instead of a generic clar
  assert.match(responseText(turn,locales.en),/vehicle details/i);
 });
 
+for(const [text,intent] of [
+ ['What should I tell the mechanic?', 'summary'],
+ ['Is it safe to drive with this?', 'urgency'],
+ ['What will the shop inspect first?', 'inspection'],
+ ['Why is the car shaking?', 'causes'],
+ ['Can you summarize this for my appointment?', 'summary'],
+])test(`local chat recognizes a customer service intent: ${intent}`,()=>{
+ const turn=replyToMessage(createConversationState('en'),text,locales.en);
+ assert.equal(turn.intent,intent);
+});
+
 for(const [text,answer,reason] of [
  ['The engine turns over but will not fire','crank','start.crank'],
  ['My dash lights go dim and it only clicks','click','start.click'],
