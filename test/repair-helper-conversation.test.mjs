@@ -41,6 +41,7 @@ test('a supported diagnostic code receives a focused code response',()=>{
  assert.equal(turn.state.answers.engineCode,'lean');
  assert.match(responseText(turn,locales.en),/air|fuel|intake/i);
  assert.match(responseText(turn,locales.en),/does not identify.*part/i);
+ assert.ok(turn.messageKeys.some(key=>key.startsWith('question.')));
 });
 
 test('ambiguous chat text asks for clarification instead of inventing a symptom',()=>{

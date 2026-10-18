@@ -18,6 +18,7 @@ function vehicleFromMessage(message){
  return year&&makeModel?`${year} ${makeModel}${mileage?` · ${mileage}`:''}`:'';
 }
 function response(kind,state,result,brief,messageKeys,nextQuestion=null,intent=null){
+ if(nextQuestion)messageKeys=[...messageKeys,`question.${nextQuestion}`];
  const messages=append(state,'assistant',messageKeys.join(' '));
  return {state:{...state,messages},kind,messageKeys,result,brief,nextQuestion,intent};
 }
