@@ -68,6 +68,13 @@ test('vehicle details are remembered across a later symptom message',()=>{
  assert.ok(turn.state.messages.some(message=>message.text.includes('2018 Honda Civic')));
 });
 
+test('vehicle details receive a useful acknowledgement instead of a generic clarification',()=>{
+ const turn=replyToMessage(createConversationState('en'),'It is a 2018 Honda Civic with 112,000 miles',locales.en);
+ assert.equal(turn.kind,'reply');
+ assert.equal(turn.messageKeys[0],'vehicle');
+ assert.match(responseText(turn,locales.en),/vehicle details/i);
+});
+
 for(const [text,answer,reason] of [
  ['The engine turns over but will not fire','crank','start.crank'],
  ['My dash lights go dim and it only clicks','click','start.click'],

@@ -72,6 +72,7 @@ const conversation={
  responses:{
   acknowledge:t('Thank you. I will keep that detail in mind.','Gracias. Tendré en cuenta ese detalle.','谢谢，我会把这条信息纳入判断。'),
  clarify:t('Please describe what you notice: a sound, warning light, smell, change in driving, or when it happens.','Describa lo que nota: un ruido, luz de advertencia, olor, cambio al conducir o cuándo ocurre.','请说明您注意到的情况：异响、警告灯、气味、驾驶变化或发生条件。'),
+  vehicle:t('I saved those vehicle details. Now tell me what the vehicle is doing or what changed.','Guardé los datos del vehículo. Ahora cuénteme qué hace el vehículo o qué cambió.','我已记录车辆信息。现在请说明车辆有什么异常或发生了什么变化。'),
  correction:t('I updated the conversation with your correction.','He actualizado la conversación con su corrección.','我已根据您的更正更新了本次对话。'),
  needDetails:t('I need one or two more details before suggesting a possible cause.','Necesito uno o dos detalles más antes de sugerir una posible causa.','在提出可能原因前，我还需要一两条信息。'),
  causes:t('These are possible causes supported by the details so far. Testing is needed before replacing any part.','Estas son posibles causas compatibles con lo indicado hasta ahora. Se requiere una prueba antes de cambiar cualquier pieza.','以下是根据目前信息可能符合的原因；更换任何零件前都需要检查确认。'),

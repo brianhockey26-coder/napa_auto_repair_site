@@ -41,6 +41,7 @@ export function replyToMessage(previous,raw,copy){
  }
  const state={...starting,text:currentText(starting.messages),vehicle:vehicleFromMessage(message)||starting.vehicle,topics:[...topics],answers,corrections};
  const result=conversationalResult(state),brief=buildAdvisorBrief(result);
+ if(vehicleFromMessage(message)&&!recognized.topics.length&&!Object.keys(facts).length)return response('reply',state,result,brief,['vehicle'],null,'vehicle');
  if(result.level>=3&&!result.historical)return response('safety',state,result,brief,['safety'],null,intent);
  if(intent==='code')return response('reply',state,result,brief,[`code.${facts.engineCode||'unknown'}`],result.questions[0]||null,'code');
  if(intent==='causes')return response('reply',state,result,brief,[result.possibilities.length?'causes':'needDetails'],result.questions[0]||null,intent);
