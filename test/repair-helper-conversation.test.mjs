@@ -61,6 +61,13 @@ test('common battery-dead wording identifies an electrical starting concern',()=
  assert.match(responseText(turn,locales.en),/battery|connections|starting/i);
 });
 
+test('vehicle details are remembered across a later symptom message',()=>{
+ let state=replyToMessage(createConversationState('en'),'It is a 2018 Honda Civic with 112,000 miles',locales.en).state;
+ const turn=replyToMessage(state,'The steering wheel shakes when I brake',locales.en);
+ assert.equal(turn.state.vehicle,'2018 Honda Civic · 112,000 miles');
+ assert.ok(turn.state.messages.some(message=>message.text.includes('2018 Honda Civic')));
+});
+
 for(const [text,answer,reason] of [
  ['The engine turns over but will not fire','crank','start.crank'],
  ['My dash lights go dim and it only clicks','click','start.click'],
