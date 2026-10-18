@@ -20,13 +20,22 @@ try{
   const {locales}=await import('./locales.js');
   const model=await createLocalModel({onProgress:value=>console.log('Model progress',Math.round(value*100))});
   try{
-   const traced={...model,reply:async context=>{try{return await model.reply(context);}catch(error){console.log('Inference error:',error.message);throw error;}}};
+   const traced={...model,reply:async context=>{try{const result=await model.reply(context);console.log('Generated candidate:',context.locale,result);return result;}catch(error){console.log('Inference error:',error.message);throw error;}}};
    const controller=createChatController({locale:'en',copy:locales.en,loadModel:async()=>traced});await controller.enableModel();
    await controller.send('My car clicks rapidly and the dashboard dims when I try to start it. What could cause that?');
    const first=controller.snapshot().messages.filter(m=>m.kind==='model').at(-1)?.content;
    await controller.send('It is a 2015 Honda Accord. What should I tell the mechanic?');
    const followup=controller.snapshot().messages.at(-1)?.content;
-   if(!first||!followup?.includes('2015 Honda Accord')||!followup.includes('clicks rapidly'))throw Error('Missing recorded summary');return {first,followup};
+   if(!first||!followup?.includes('2015 Honda Accord')||!followup.includes('clicks rapidly'))throw Error('Missing recorded summary');
+   const multilingual={};
+   for(const [locale,prompt]of [['es','Mi coche hace clics rapidos y las luces se vuelven tenues al intentar arrancar.'],['zh','启动时连续咔哒，仪表灯变暗，无法启动。']]){
+    const chat=createChatController({locale,copy:locales[locale],loadModel:async()=>traced});await chat.enableModel();await chat.send(prompt);
+    const generated=chat.snapshot().messages.find(m=>m.kind==='model')?.content;
+    if(!generated){console.log('Missing localized model snapshot:',JSON.stringify(chat.snapshot()));throw Error(`No usable ${locale} local-model reply`);}
+    if(locale==='zh'&&!/[\u4e00-\u9fff]/u.test(generated))throw Error('Chinese reply not localized');
+    multilingual[locale]=generated;
+   }
+   return {first,followup,multilingual};
   }finally{await model.dispose();}
  });
  if(!result?.first)throw Error('No real model response');console.log('REAL MODEL REPLIES:',JSON.stringify(result));

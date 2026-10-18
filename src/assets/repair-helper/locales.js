@@ -70,6 +70,7 @@ const conversation={
  welcome:t('Tell me what the vehicle is doing, and I will ask only the details that help narrow the next step.','Cuénteme qué hace el vehículo y le pediré solo los detalles que ayuden a orientar el siguiente paso.','请描述车辆的异常情况；我只会询问有助于判断下一步的关键信息。'),
  summaryRequest:t('Prepare my visit summary','Preparar el resumen de mi visita','生成到店沟通摘要'),
  responses:{
+ startDetails:t('A no-start problem can behave in different ways. What happens when you try: silence, clicking, slow turning, or normal turning without the engine starting? Tell me what you already noticed; there is no need to try again.','Un problema de arranque puede presentarse de distintas formas. ¿Qué ocurre: silencio, clics, giro lento o giro normal sin encender? Cuénteme lo que ya observó; no necesita intentarlo de nuevo.','无法启动有不同表现：完全没反应、有咔哒声、转动缓慢，还是正常转动但无法发动？请描述已经观察到的情况，无需再次尝试。'),
   acknowledge:t('Thank you. I will keep that detail in mind.','Gracias. Tendré en cuenta ese detalle.','谢谢，我会把这条信息纳入判断。'),
  clarify:t('Please describe what you notice: a sound, warning light, smell, change in driving, or when it happens.','Describa lo que nota: un ruido, luz de advertencia, olor, cambio al conducir o cuándo ocurre.','请说明您注意到的情况：异响、警告灯、气味、驾驶变化或发生条件。'),
   vehicle:t('I saved those vehicle details. Now tell me what the vehicle is doing or what changed.','Guardé los datos del vehículo. Ahora cuénteme qué hace el vehículo o qué cambió.','我已记录车辆信息。现在请说明车辆有什么异常或发生了什么变化。'),

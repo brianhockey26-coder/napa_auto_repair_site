@@ -43,3 +43,47 @@ test('visit summary includes recorded vehicle and symptoms rather than asking ag
  assert.match(reply,/2015 Honda Accord/);assert.match(reply,/clicks rapidly/);assert.match(reply,/battery/i);assert.equal(calls,1);
  assert.doesNotMatch(reply,/I can prepare/);
 });
+test('educational question gives a useful answer without inventing a current failure',async()=>{
+ const c=createChatController({locale:'en',copy:locales.en});await c.send('What is a starter motor?');
+ assert.match(c.snapshot().messages.at(-1).content,/turns the engine/);
+ assert.deepEqual(c.snapshot().conversation.answers,{});assert.deepEqual(c.snapshot().conversation.topics,[]);
+});
+test('explanations never suppress a current safety hazard',async()=>{
+ const c=createChatController({locale:'en',copy:locales.en});await c.send('I smell gasoline now');await c.send('What is a starter motor?');
+ assert.equal(c.snapshot().messages.at(-1).kind,'safety');
+});
+test('next-question reply suggestions use the current language',async()=>{
+ const c=createChatController({locale:'zh',copy:locales.zh});await c.send('汽车无法启动');
+ assert.ok(c.snapshot().suggestedReplies.some(r=>/咔哒/.test(r.text)));
+});
+test('misleading generated reply is discarded while useful advisor text remains',async()=>{
+ const c=createChatController({locale:'en',copy:locales.en,loadModel:async()=>({interrupt(){},reply:async()=>"It's completely safe to drive."})});
+ await c.enableModel();await c.send('My battery is dead');
+ assert.equal(c.snapshot().messages.length,2);assert.equal(c.snapshot().modelStatus,'ready');assert.match(c.snapshot().messages.at(-1).content,/battery/i);
+});
+test('new concern excludes old symptoms from generated context',async()=>{
+ let context;const c=createChatController({locale:'en',copy:locales.en,loadModel:async()=>({interrupt(){},reply:async value=>{context=value;return 'An inspection can narrow this down.';}})});
+ await c.enableModel();await c.send('My brakes squeal');await c.send('New issue: the AC blows warm');
+ assert.ok(!context.messages.some(m=>m.content.includes('brakes squeal')));
+});
+test('stop generation preserves the conversation and discards late text',async()=>{
+ const pending=defer();let interrupted=0;
+ const c=createChatController({locale:'en',copy:locales.en,loadModel:async()=>({interrupt(){interrupted++;},reply:()=>pending.promise})});
+ await c.enableModel();const sending=c.send('My battery is dead');await new Promise(setImmediate);c.stop();
+ assert.equal(c.snapshot().generating,false);assert.equal(c.snapshot().messages.length,2);assert.equal(interrupted,1);
+ pending.resolve('Late answer');await sending;assert.equal(c.snapshot().messages.length,2);
+});
+test('a past symptom cannot open model inference for an independent current hazard',async()=>{
+ let calls=0;const c=createChatController({locale:'en',copy:locales.en,loadModel:async()=>({interrupt(){},reply:async()=>{calls++;return 'Routine explanation';}})});
+ await c.enableModel();await c.send('Yesterday I saw smoke, but now I smell gasoline');
+ assert.equal(c.snapshot().assessment.level,3);assert.equal(calls,0);assert.equal(c.snapshot().messages.at(-1).kind,'safety');
+});
+test('mixed definition and symptom report retains facts and visit-summary details',async()=>{
+ const c=createChatController({locale:'en',copy:locales.en});await c.send('What is a starter? The car clicks and will not start');
+ assert.equal(c.snapshot().conversation.answers.start,'click');assert.ok(c.snapshot().conversation.topics.includes('start'));
+ await c.send('Prepare my visit summary');assert.match(c.snapshot().messages.at(-1).content,/The car clicks/);
+});
+test('mixed educational request without punctuation still retains the reported symptom',async()=>{
+ const c=createChatController({locale:'en',copy:locales.en});await c.send('What is a starter the car clicks and will not start');
+ assert.equal(c.snapshot().conversation.answers.start,'click');
+});

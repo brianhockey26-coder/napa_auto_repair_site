@@ -31,6 +31,15 @@ try{
   await page.locator('[data-reset-chat]').click();assert.equal(await page.locator('.rh-message').count(),0);
  }
  assert.equal(external.length,0,'no model requests before opt-in');
+ await page.goto(origin+'/');await reply('My car will not start');
+ await page.locator('.rh-followups button').filter({hasText:'Clicks but will not crank'}).click();
+ await page.locator('.rh-followups button').filter({hasText:'None of these'}).click();
+ await page.locator('.rh-followups button').filter({hasText:'Now or recurring recently'}).click();
+ await page.locator('.rh-followups button').filter({hasText:'Several rapid clicks'}).click();
+ await page.locator('.rh-followups button').filter({hasText:'They dim strongly'}).click();
+ assert.match(await page.locator('.rh-assistant').last().textContent(),/battery|connections/i);
+ await reply('What does that mean?');assert.match(await page.locator('.rh-assistant').last().textContent(),/Starting needs a large burst/);
+ await page.locator('[data-reset-chat]').click();
  await reply('<img src=x onerror=alert(1)>');assert.equal(await page.locator('.rh-user img').count(),0);
  await page.locator('[data-reset-chat]').click();await reply('My brakes have failed and I cannot stop');await page.locator('.rh-safety').waitFor();
  await page.setViewportSize({width:375,height:812});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));

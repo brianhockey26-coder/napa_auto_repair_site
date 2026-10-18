@@ -6,3 +6,6 @@ export const modelCopy={
 modelCopy.en.storage='The browser has insufficient storage for this model. Continue with the standard advisor or free browser storage and retry.';
 modelCopy.es.storage='El navegador no tiene suficiente espacio para el modelo. Continúe con el asesor estándar o libere espacio del navegador y vuelva a intentar.';
 modelCopy.zh.storage='浏览器存储空间不足，无法保存模型。您可继续使用标准助手，或清理浏览器存储空间后重试。';
+modelCopy.en.stop='Stop generating';
+modelCopy.es.stop='Detener respuesta';
+modelCopy.zh.stop='停止生成';

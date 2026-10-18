@@ -52,8 +52,9 @@ test('ambiguous chat text asks for clarification instead of inventing a symptom'
 
 test('plain-language no-start concern gets a specific likely-system explanation',()=>{
  const turn=replyToMessage(createConversationState('en'),'My car will not start',locales.en);
- assert.equal(turn.state.answers.start,'crank');
- assert.match(responseText(turn,locales.en),/fuel|ignition|engine/i);
+ assert.equal(turn.state.answers.start,undefined);
+ assert.equal(turn.nextQuestion,'start');
+ assert.match(responseText(turn,locales.en),/silence|clicking|turning/i);
 });
 
 test('common battery-dead wording identifies an electrical starting concern',()=>{

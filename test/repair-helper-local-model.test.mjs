@@ -10,6 +10,7 @@ test('unsupported devices and absent pinned models fail closed',()=>{
 });
 test('active danger never produces a model prompt; routine history is bounded and localized',()=>{
  assert.equal(buildModelMessages({assessment:{level:3}}),null);
+ assert.equal(buildModelMessages({assessment:{level:3,historical:true}}),null);
  const messages=buildModelMessages({locale:'zh',assessment:{level:1},guidance:'Inspection soon',messages:Array.from({length:40},()=>({role:'user',content:'x'.repeat(2000)}))});
  assert.match(messages[0].content,/Simplified Chinese/);
  assert.match(messages[0].content,/Inspection soon/);
@@ -40,4 +41,10 @@ test('conversation context alternates roles and never starts with an orphan assi
 test('retained vehicle facts survive short transcript history',()=>{
  const messages=buildModelMessages({assessment:{level:1},vehicle:'2015 Honda Accord',messages:[{role:'user',content:'still clicking'}]});
  assert.match(messages[1].content,/2015 Honda Accord/);
+});
+test('long multilingual conversations fit the small model context while keeping latest question',()=>{
+ const history=Array.from({length:20},(_,i)=>({role:i%2?'assistant':'user',content:'车辆异常信息'.repeat(200)}));history.push({role:'user',content:'刚才的问题呢？'});
+ const result=buildModelMessages({locale:'zh',messages:history,assessment:{level:1},facts:{start:'click'},nextQuestion:'仪表灯是否变暗？'});
+ assert.ok(result.slice(1).reduce((sum,m)=>sum+m.content.length,0)<=1300);
+ assert.match(result[0].content,/仪表灯是否变暗/);assert.match(result[0].content,/"start":"click"/);assert.match(result.at(-1).content,/刚才的问题呢/);
 });

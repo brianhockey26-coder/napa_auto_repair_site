@@ -38,13 +38,17 @@ if(root){
   progress.hidden=snapshot.modelStatus!=='loading';progress.value=snapshot.progress;
   enable.disabled=['loading','ready'].includes(snapshot.modelStatus);
   thinking.hidden=!snapshot.generating;
+  stop.hidden=!snapshot.generating;
+  followups.replaceChildren(...snapshot.suggestedReplies.map(reply=>button(reply.text,()=>{void controller.send(reply.text);input.focus();})));
  }});
  const enable=button(mc.enable,()=>controller.enableModel());enable.dataset.enableModel='';
+ const stop=button(mc.stop,()=>controller.stop());stop.hidden=true;stop.dataset.stopGeneration='';
  const modelPanel=node('details',{class:'rh-model-panel'});
  modelPanel.append(node('summary',{},mc.title),node('p',{class:'rh-small'},mc.disclosure),enable,status,progress);
  const send=()=>{const text=input.value.trim();if(!text)return;input.value='';void controller.send(text);input.focus();};
  input.addEventListener('keydown',event=>{if(event.key==='Enter'&&!event.shiftKey&&!event.isComposing){event.preventDefault();send();}});
  const suggestions=node('div',{class:'rh-suggestions'});
+ const followups=node('div',{class:'rh-followups',role:'group','aria-label':copy.ui.shortcuts});
  for(const prompt of mc.examples)suggestions.append(button(prompt,()=>{void controller.send(prompt);input.focus();}));
  const controls=node('div',{class:'rh-controls'});
  const call=node('a',{class:'rh-chat-call',href:'tel:+19084166132'},copy.ui.call);
@@ -58,7 +62,7 @@ if(root){
  composer.append(label,input,sendButton);
  controls.append(call);
  mount.classList.add('rh-chat-window');
- mount.replaceChildren(header,modelPanel,transcript,suggestions,thinking,composer,controls);
+ mount.replaceChildren(header,modelPanel,transcript,suggestions,followups,thinking,stop,composer,controls);
  const mapping=['lights','maintenance','brakes','engine','steering','climate'];
  document.querySelectorAll('.service-card').forEach((card,index)=>{
   const details=card.querySelector('.service-detail');if(!details)return;
